@@ -4,15 +4,26 @@ import * as ReactDOM from 'react-dom/client';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import * as serviceWorker from './serviceWorker';
+import { Amplify } from 'aws-amplify';
+import awsExports from './aws-exports';
+import { Authenticator } from '@aws-amplify/ui-react';
+import '@aws-amplify/ui-react/styles.css';
 
 const container = document.getElementById('root');
 const root = ReactDOM.createRoot(container);
 
+Amplify.configure(awsExports);
+
+
 root.render(
   <StrictMode>
     <ColorModeScript />
-    <App />
-  </StrictMode>
+      <Authenticator>
+      {({ signOut, user }) => (
+        <App signOut={signOut} user={user} />
+      )}
+      </Authenticator>
+    </StrictMode>
 );
 
 // If you want your app to work offline and load faster, you can change

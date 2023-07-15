@@ -1,0 +1,426 @@
+/***************************************************************************
+ * The contents of this file were generated with Amplify Studio.           *
+ * Please refrain from making any modifications to this file.              *
+ * Any changes to this file will be overwritten when running amplify pull. *
+ **************************************************************************/
+
+/* eslint-disable */
+import * as React from "react";
+import { Button, Flex, Grid, TextField } from "@aws-amplify/ui-react";
+import { getOverrideProps } from "@aws-amplify/ui-react/internal";
+import { Profile } from "../models";
+import { fetchByPath, validateField } from "./utils";
+import { DataStore } from "aws-amplify";
+export default function ProfileCreateForm(props) {
+  const {
+    clearOnSuccess = true,
+    onSuccess,
+    onError,
+    onSubmit,
+    onValidate,
+    onChange,
+    overrides,
+    ...rest
+  } = props;
+  const initialValues = {
+    display_name: "",
+    user_name: "",
+    balance: "",
+    currency: "",
+    url: "",
+    bio: "",
+    user_id: "",
+    token: "",
+  };
+  const [display_name, setDisplay_name] = React.useState(
+    initialValues.display_name
+  );
+  const [user_name, setUser_name] = React.useState(initialValues.user_name);
+  const [balance, setBalance] = React.useState(initialValues.balance);
+  const [currency, setCurrency] = React.useState(initialValues.currency);
+  const [url, setUrl] = React.useState(initialValues.url);
+  const [bio, setBio] = React.useState(initialValues.bio);
+  const [user_id, setUser_id] = React.useState(initialValues.user_id);
+  const [token, setToken] = React.useState(initialValues.token);
+  const [errors, setErrors] = React.useState({});
+  const resetStateValues = () => {
+    setDisplay_name(initialValues.display_name);
+    setUser_name(initialValues.user_name);
+    setBalance(initialValues.balance);
+    setCurrency(initialValues.currency);
+    setUrl(initialValues.url);
+    setBio(initialValues.bio);
+    setUser_id(initialValues.user_id);
+    setToken(initialValues.token);
+    setErrors({});
+  };
+  const validations = {
+    display_name: [],
+    user_name: [{ type: "Required" }],
+    balance: [{ type: "Required" }],
+    currency: [{ type: "Required" }],
+    url: [],
+    bio: [],
+    user_id: [{ type: "Required" }],
+    token: [],
+  };
+  const runValidationTasks = async (
+    fieldName,
+    currentValue,
+    getDisplayValue
+  ) => {
+    const value =
+      currentValue && getDisplayValue
+        ? getDisplayValue(currentValue)
+        : currentValue;
+    let validationResponse = validateField(value, validations[fieldName]);
+    const customValidator = fetchByPath(onValidate, fieldName);
+    if (customValidator) {
+      validationResponse = await customValidator(value, validationResponse);
+    }
+    setErrors((errors) => ({ ...errors, [fieldName]: validationResponse }));
+    return validationResponse;
+  };
+  return (
+    <Grid
+      as="form"
+      rowGap="15px"
+      columnGap="15px"
+      padding="20px"
+      onSubmit={async (event) => {
+        event.preventDefault();
+        let modelFields = {
+          display_name,
+          user_name,
+          balance,
+          currency,
+          url,
+          bio,
+          user_id,
+          token,
+        };
+        const validationResponses = await Promise.all(
+          Object.keys(validations).reduce((promises, fieldName) => {
+            if (Array.isArray(modelFields[fieldName])) {
+              promises.push(
+                ...modelFields[fieldName].map((item) =>
+                  runValidationTasks(fieldName, item)
+                )
+              );
+              return promises;
+            }
+            promises.push(
+              runValidationTasks(fieldName, modelFields[fieldName])
+            );
+            return promises;
+          }, [])
+        );
+        if (validationResponses.some((r) => r.hasError)) {
+          return;
+        }
+        if (onSubmit) {
+          modelFields = onSubmit(modelFields);
+        }
+        try {
+          Object.entries(modelFields).forEach(([key, value]) => {
+            if (typeof value === "string" && value.trim() === "") {
+              modelFields[key] = undefined;
+            }
+          });
+          await DataStore.save(new Profile(modelFields));
+          if (onSuccess) {
+            onSuccess(modelFields);
+          }
+          if (clearOnSuccess) {
+            resetStateValues();
+          }
+        } catch (err) {
+          if (onError) {
+            onError(modelFields, err.message);
+          }
+        }
+      }}
+      {...getOverrideProps(overrides, "ProfileCreateForm")}
+      {...rest}
+    >
+      <TextField
+        label="Display name"
+        isRequired={false}
+        isReadOnly={false}
+        value={display_name}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              display_name: value,
+              user_name,
+              balance,
+              currency,
+              url,
+              bio,
+              user_id,
+              token,
+            };
+            const result = onChange(modelFields);
+            value = result?.display_name ?? value;
+          }
+          if (errors.display_name?.hasError) {
+            runValidationTasks("display_name", value);
+          }
+          setDisplay_name(value);
+        }}
+        onBlur={() => runValidationTasks("display_name", display_name)}
+        errorMessage={errors.display_name?.errorMessage}
+        hasError={errors.display_name?.hasError}
+        {...getOverrideProps(overrides, "display_name")}
+      ></TextField>
+      <TextField
+        label="User name"
+        isRequired={true}
+        isReadOnly={false}
+        value={user_name}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              display_name,
+              user_name: value,
+              balance,
+              currency,
+              url,
+              bio,
+              user_id,
+              token,
+            };
+            const result = onChange(modelFields);
+            value = result?.user_name ?? value;
+          }
+          if (errors.user_name?.hasError) {
+            runValidationTasks("user_name", value);
+          }
+          setUser_name(value);
+        }}
+        onBlur={() => runValidationTasks("user_name", user_name)}
+        errorMessage={errors.user_name?.errorMessage}
+        hasError={errors.user_name?.hasError}
+        {...getOverrideProps(overrides, "user_name")}
+      ></TextField>
+      <TextField
+        label="Balance"
+        isRequired={true}
+        isReadOnly={false}
+        type="number"
+        step="any"
+        value={balance}
+        onChange={(e) => {
+          let value = isNaN(parseFloat(e.target.value))
+            ? e.target.value
+            : parseFloat(e.target.value);
+          if (onChange) {
+            const modelFields = {
+              display_name,
+              user_name,
+              balance: value,
+              currency,
+              url,
+              bio,
+              user_id,
+              token,
+            };
+            const result = onChange(modelFields);
+            value = result?.balance ?? value;
+          }
+          if (errors.balance?.hasError) {
+            runValidationTasks("balance", value);
+          }
+          setBalance(value);
+        }}
+        onBlur={() => runValidationTasks("balance", balance)}
+        errorMessage={errors.balance?.errorMessage}
+        hasError={errors.balance?.hasError}
+        {...getOverrideProps(overrides, "balance")}
+      ></TextField>
+      <TextField
+        label="Currency"
+        isRequired={true}
+        isReadOnly={false}
+        value={currency}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              display_name,
+              user_name,
+              balance,
+              currency: value,
+              url,
+              bio,
+              user_id,
+              token,
+            };
+            const result = onChange(modelFields);
+            value = result?.currency ?? value;
+          }
+          if (errors.currency?.hasError) {
+            runValidationTasks("currency", value);
+          }
+          setCurrency(value);
+        }}
+        onBlur={() => runValidationTasks("currency", currency)}
+        errorMessage={errors.currency?.errorMessage}
+        hasError={errors.currency?.hasError}
+        {...getOverrideProps(overrides, "currency")}
+      ></TextField>
+      <TextField
+        label="Url"
+        isRequired={false}
+        isReadOnly={false}
+        value={url}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              display_name,
+              user_name,
+              balance,
+              currency,
+              url: value,
+              bio,
+              user_id,
+              token,
+            };
+            const result = onChange(modelFields);
+            value = result?.url ?? value;
+          }
+          if (errors.url?.hasError) {
+            runValidationTasks("url", value);
+          }
+          setUrl(value);
+        }}
+        onBlur={() => runValidationTasks("url", url)}
+        errorMessage={errors.url?.errorMessage}
+        hasError={errors.url?.hasError}
+        {...getOverrideProps(overrides, "url")}
+      ></TextField>
+      <TextField
+        label="Bio"
+        isRequired={false}
+        isReadOnly={false}
+        value={bio}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              display_name,
+              user_name,
+              balance,
+              currency,
+              url,
+              bio: value,
+              user_id,
+              token,
+            };
+            const result = onChange(modelFields);
+            value = result?.bio ?? value;
+          }
+          if (errors.bio?.hasError) {
+            runValidationTasks("bio", value);
+          }
+          setBio(value);
+        }}
+        onBlur={() => runValidationTasks("bio", bio)}
+        errorMessage={errors.bio?.errorMessage}
+        hasError={errors.bio?.hasError}
+        {...getOverrideProps(overrides, "bio")}
+      ></TextField>
+      <TextField
+        label="User id"
+        isRequired={true}
+        isReadOnly={false}
+        value={user_id}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              display_name,
+              user_name,
+              balance,
+              currency,
+              url,
+              bio,
+              user_id: value,
+              token,
+            };
+            const result = onChange(modelFields);
+            value = result?.user_id ?? value;
+          }
+          if (errors.user_id?.hasError) {
+            runValidationTasks("user_id", value);
+          }
+          setUser_id(value);
+        }}
+        onBlur={() => runValidationTasks("user_id", user_id)}
+        errorMessage={errors.user_id?.errorMessage}
+        hasError={errors.user_id?.hasError}
+        {...getOverrideProps(overrides, "user_id")}
+      ></TextField>
+      <TextField
+        label="Token"
+        isRequired={false}
+        isReadOnly={false}
+        value={token}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              display_name,
+              user_name,
+              balance,
+              currency,
+              url,
+              bio,
+              user_id,
+              token: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.token ?? value;
+          }
+          if (errors.token?.hasError) {
+            runValidationTasks("token", value);
+          }
+          setToken(value);
+        }}
+        onBlur={() => runValidationTasks("token", token)}
+        errorMessage={errors.token?.errorMessage}
+        hasError={errors.token?.hasError}
+        {...getOverrideProps(overrides, "token")}
+      ></TextField>
+      <Flex
+        justifyContent="space-between"
+        {...getOverrideProps(overrides, "CTAFlex")}
+      >
+        <Button
+          children="Clear"
+          type="reset"
+          onClick={(event) => {
+            event.preventDefault();
+            resetStateValues();
+          }}
+          {...getOverrideProps(overrides, "ClearButton")}
+        ></Button>
+        <Flex
+          gap="15px"
+          {...getOverrideProps(overrides, "RightAlignCTASubFlex")}
+        >
+          <Button
+            children="Submit"
+            type="submit"
+            variation="primary"
+            isDisabled={Object.values(errors).some((e) => e?.hasError)}
+            {...getOverrideProps(overrides, "SubmitButton")}
+          ></Button>
+        </Flex>
+      </Flex>
+    </Grid>
+  );
+}

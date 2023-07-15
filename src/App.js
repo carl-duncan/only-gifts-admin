@@ -1,40 +1,23 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   ChakraProvider,
-  Box,
-  Text,
-  Link,
-  VStack,
-  Code,
-  Grid,
-  theme,
+  theme, Center,
 } from '@chakra-ui/react';
-import { ColorModeSwitcher } from './ColorModeSwitcher';
-import { Logo } from './Logo';
+import { Button } from '@aws-amplify/ui-react';
 
-function App() {
+
+function App({signOut: signOut, user}) {
+  useEffect(() => {
+    if (user.username === '696aa3f6-93de-4a40-8d66-6f47706e94eb') {
+      signOut();
+    }
+  }, [user.username, signOut]);
+
   return (
     <ChakraProvider theme={theme}>
-      <Box textAlign="center" fontSize="xl">
-        <Grid minH="100vh" p={3}>
-          <ColorModeSwitcher justifySelf="flex-end" />
-          <VStack spacing={8}>
-            <Logo h="40vmin" pointerEvents="none" />
-            <Text>
-              Edit <Code fontSize="xl">src/App.js</Code> and save to reload.
-            </Text>
-            <Link
-              color="teal.500"
-              href="https://chakra-ui.com"
-              fontSize="2xl"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learn Chakra
-            </Link>
-          </VStack>
-        </Grid>
-      </Box>
+      <Center>
+        {user.username}
+      </Center>
     </ChakraProvider>
   );
 }
