@@ -3,15 +3,13 @@ import {
   ChakraProvider,
   theme, Center,
 } from '@chakra-ui/react';
-import { Button } from '@aws-amplify/ui-react';
 
-
-function App({signOut: signOut, user}) {
+function App({signOut, user}) {
   useEffect(() => {
-    if (user.username === '696aa3f6-93de-4a40-8d66-6f47706e94eb') {
+  if (!user.attributes['custom:is_admin']) {
       signOut();
     }
-  }, [user.username, signOut]);
+  }, [user]);
 
   return (
     <ChakraProvider theme={theme}>
