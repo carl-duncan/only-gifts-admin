@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
 import {
-  ChakraProvider,
+  Box,
+  ChakraProvider, Switch,
   theme,
 } from '@chakra-ui/react';
-import { useNavigate } from 'react-router-dom';
+import { Route, useNavigate } from 'react-router-dom';
 
 
 import { Menu, MenuItem, View, Divider } from '@aws-amplify/ui-react';
@@ -29,6 +30,20 @@ function App({signOut, user}) {
           <Divider />
           <MenuItem color={"red"} onClick={() => signOut()}>Sign Out</MenuItem>
         </Menu>
+        <Switch>
+          <Route exact path="/">
+            <Box />
+          </Route>
+          <Route path="/transactions">
+            <Box />
+          </Route>
+          <Route path="/users">
+            <Box />
+          </Route>
+          <Route path="/withdrawals">
+            <Box />
+          </Route>
+        </Switch>
       </View>
     </ChakraProvider>
   );
