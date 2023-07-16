@@ -1,13 +1,14 @@
 import React, { useEffect } from 'react';
 import {
   Box,
-  ChakraProvider, Switch,
+  ChakraProvider,
   theme,
 } from '@chakra-ui/react';
-import { Route, useNavigate } from 'react-router-dom';
+import { Route, useNavigate , Routes} from 'react-router-dom';
 
 
 import { Menu, MenuItem, View, Divider } from '@aws-amplify/ui-react';
+import { UsersPage } from './Page/UsersPage';
 
 function App({signOut, user}) {
   const navigate = useNavigate();
@@ -30,21 +31,12 @@ function App({signOut, user}) {
           <Divider />
           <MenuItem color={"red"} onClick={() => signOut()}>Sign Out</MenuItem>
         </Menu>
-        <Switch>
-          <Route exact path="/">
-            <Box />
-          </Route>
-          <Route path="/transactions">
-            <Box />
-          </Route>
-          <Route path="/users">
-            <Box />
-          </Route>
-          <Route path="/withdrawals">
-            <Box />
-          </Route>
-        </Switch>
       </View>
+      <Box w="100vw" pt="10px" pl={"20px"} pr={"20px"} m={'20px'}>
+        <Routes>
+          <Route path='/users' element={<UsersPage/>} />
+        </Routes>
+      </Box>
     </ChakraProvider>
   );
 }
