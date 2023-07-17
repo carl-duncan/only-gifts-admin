@@ -1,9 +1,6 @@
 import {
-  Badge,
-  Box, Button,
-  Flex,
-  Menu,
-  MenuButton, MenuItem, MenuList,
+  Text,
+  Box,
   Skeleton,
   Table,
   TableContainer,
@@ -27,6 +24,7 @@ export function TransactionsPage(){
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
+  const [totalDonations, setTotalDonations] = useState(0);
 
   let query = useQuery();
   const userId = query.get('userId');
@@ -35,6 +33,7 @@ export function TransactionsPage(){
     getDonations(currentPage, userId).then(response => {
       setDonations(response.donations);
       setTotalPages(response.totalPages);
+      setTotalDonations(response.totalDonations);
       setIsLoading(false);
     });
   }, [currentPage]);
@@ -46,10 +45,12 @@ export function TransactionsPage(){
 
   return (
     <Box>
-      <Box h={"50px"}/>
+      <Box  h={"25px"}/>
+      <Text fontSize='2xl' as='b' >Transactions ({totalDonations})</Text>
+      <Box h={"25px"}/>
       <Skeleton isLoaded={!isLoading}>
         <TableContainer>
-          <Table>
+          <Table variant={'striped'}>
             <Thead>
               <Tr>
                 <Th>Amount (USD)</Th>

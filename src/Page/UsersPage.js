@@ -6,6 +6,7 @@ import {
   Tr,
   Th,
   Td,
+  Text,
   TableContainer,
 } from '@chakra-ui/react';
 import { Pagination, SearchField } from '@aws-amplify/ui-react';
@@ -18,11 +19,13 @@ export function UsersPage(){
   const [totalPages, setTotalPages] = useState(1);
   const [searchValue, setSearchValue] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [totalUsers, setTotalUsers] = useState(0);
 
   useEffect(() => {
     getUsers(currentPage, searchValue).then(response => {
       setUsers(response.users);
       setTotalPages(response.totalPages);
+      setTotalUsers(response.totalUsers);
       setIsLoading(false);
     });
   }, [currentPage, searchValue]);
@@ -39,7 +42,9 @@ export function UsersPage(){
 
   return (
     <Box>
-      <Box h={"50px"}/>
+      <Box  h={"25px"}/>
+      <Text fontSize='2xl' as='b' >Users ({totalUsers})</Text>
+      <Box h={"25px"}/>
       <SearchField
         label='search'
         placeholder='Search by Username'
@@ -49,7 +54,7 @@ export function UsersPage(){
       <Box h={"50px"}/>
       <Skeleton isLoaded={!isLoading}>
         <TableContainer>
-          <Table>
+          <Table variant={'striped'}>
             <Thead>
               <Tr>
                 <Th>Username</Th>
@@ -68,7 +73,7 @@ export function UsersPage(){
                   <Td>{user.balance}</Td>
                   <Td>{user.createdAt}</Td>
                   <Td>
-                    <Badge>Banned</Badge>
+                    <Badge>Available</Badge>
                   </Td>
                   <Td>
                     <Flex justifyContent="flex-end">
@@ -77,8 +82,9 @@ export function UsersPage(){
                           Actions
                         </MenuButton>
                         <MenuList>
-                          <MenuItem colorScheme='red'>Ban</MenuItem>
+                          <MenuItem colorScheme='red'>Ban {user.user_name}</MenuItem>
                           <MenuItem colorScheme='blue'>View Page</MenuItem>
+                          <MenuItem colorScheme='blue'>View Transactions</MenuItem>
                         </MenuList>
                       </Menu>
                     </Flex>
