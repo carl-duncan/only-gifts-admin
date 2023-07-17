@@ -5,7 +5,7 @@
  **************************************************************************/
 
 import * as React from "react";
-import { GridProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { GridProps, SwitchFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
 import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
 import { Profile } from "../models";
 export declare type ValidationResponse = {
@@ -22,6 +22,7 @@ export declare type ProfileUpdateFormInputValues = {
     bio?: string;
     user_id?: string;
     token?: string;
+    banned?: boolean;
 };
 export declare type ProfileUpdateFormValidationValues = {
     display_name?: ValidationFunction<string>;
@@ -32,6 +33,7 @@ export declare type ProfileUpdateFormValidationValues = {
     bio?: ValidationFunction<string>;
     user_id?: ValidationFunction<string>;
     token?: ValidationFunction<string>;
+    banned?: ValidationFunction<boolean>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type ProfileUpdateFormOverridesProps = {
@@ -44,6 +46,7 @@ export declare type ProfileUpdateFormOverridesProps = {
     bio?: PrimitiveOverrideProps<TextFieldProps>;
     user_id?: PrimitiveOverrideProps<TextFieldProps>;
     token?: PrimitiveOverrideProps<TextFieldProps>;
+    banned?: PrimitiveOverrideProps<SwitchFieldProps>;
 } & EscapeHatchProps;
 export declare type ProfileUpdateFormProps = React.PropsWithChildren<{
     overrides?: ProfileUpdateFormOverridesProps | undefined | null;

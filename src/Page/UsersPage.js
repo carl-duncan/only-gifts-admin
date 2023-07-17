@@ -1,4 +1,4 @@
-import { Box, Button, Menu, MenuButton, Skeleton, MenuList, MenuItem, Flex, Badge } from '@chakra-ui/react';
+import { Box, Button, Menu, MenuButton, Skeleton, MenuList, MenuItem, Flex, Badge, useToast } from '@chakra-ui/react';
 import {
   Table,
   Thead,
@@ -11,8 +11,9 @@ import {
 } from '@chakra-ui/react';
 import { Pagination, SearchField } from '@aws-amplify/ui-react';
 import { useEffect, useState } from 'react';
-import { getUsers } from '../Service/amplifyService';
+import { banUser, getUsers, unbanUser } from '../Service/amplifyService';
 import { BiChevronDown } from 'react-icons/all';
+import { Profile } from '../models';
 export function UsersPage(){
   const [users, setUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -20,6 +21,8 @@ export function UsersPage(){
   const [searchValue, setSearchValue] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [totalUsers, setTotalUsers] = useState(0);
+  const toast = useToast();
+
 
   useEffect(() => {
     getUsers(currentPage, searchValue).then(response => {
@@ -39,6 +42,46 @@ export function UsersPage(){
     setCurrentPage(page);
     setIsLoading(true);
   };
+
+  const handleBanUser = (userId) => {
+    banUser(userId).then(() => {
+      toast({
+        title: 'User banned',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+      setUsers(users.map(user => {
+        if (user.id === userId) {
+          return Profile.copyOf(user, updated => {
+            updated.banned = true
+          });
+        }
+        return user;
+      }
+      ));
+    });
+  }
+
+  const handleUnBanUser = (userId) => {
+    unbanUser(userId).then(() => {
+      toast({
+        title: 'User unbanned',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+    });
+    setUsers(users.map(user => {
+        if (user.id === userId) {
+          return Profile.copyOf(user, updated => {
+            updated.banned = false
+          });
+        }
+        return user;
+      }
+    ));
+  }
 
   return (
     <Box>
@@ -73,7 +116,9 @@ export function UsersPage(){
                   <Td>{user.balance}</Td>
                   <Td>{user.createdAt}</Td>
                   <Td>
-                    <Badge>Available</Badge>
+                    <Badge colorScheme={!user.banned ? 'green' : 'red'}>
+                      {user.banned ? 'Banned' : 'Active'}
+                    </Badge>
                   </Td>
                   <Td>
                     <Flex justifyContent="flex-end">
@@ -82,7 +127,18 @@ export function UsersPage(){
                           Actions
                         </MenuButton>
                         <MenuList>
-                          <MenuItem colorScheme='red'>Ban {user.user_name}</MenuItem>
+
+                          {!user.banned && (
+                            <MenuItem colorScheme='red' onClick={
+                              () => handleBanUser(user.id)
+                            }>Ban {user.user_name}</MenuItem>
+                          )}
+
+                          {user.banned && (
+                            <MenuItem colorScheme='green'
+                                      onClick={ () => handleUnBanUser(user.id) }
+                            >Unban {user.user_name}</MenuItem>
+                          )}
                           <MenuItem colorScheme='blue'>View Page</MenuItem>
                           <MenuItem colorScheme='blue'>View Transactions</MenuItem>
                         </MenuList>

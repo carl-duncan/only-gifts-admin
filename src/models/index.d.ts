@@ -52,6 +52,7 @@ type EagerProfile = {
   readonly bio?: string | null;
   readonly user_id: string;
   readonly token?: string | null;
+  readonly banned?: boolean | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -70,6 +71,7 @@ type LazyProfile = {
   readonly bio?: string | null;
   readonly user_id: string;
   readonly token?: string | null;
+  readonly banned?: boolean | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }

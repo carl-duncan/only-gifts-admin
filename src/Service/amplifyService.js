@@ -41,3 +41,27 @@ export async function getDonations(page, userId) {
     console.error(error);
   }
 }
+
+export async function banUser(userId) {
+  try {
+    const profile = await DataStore.query(Profile, (c) => c.id.eq(userId));
+    await DataStore.save(
+      Profile.copyOf(profile[0], updated => {
+        updated.banned = true
+      }));
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function unbanUser(userId) {
+try {
+    const profile = await DataStore.query(Profile, (c) => c.id.eq(userId));
+    await DataStore.save(
+      Profile.copyOf(profile[0], updated => {
+        updated.banned = false
+      }));
+  } catch (error) {
+    console.error(error);
+  }
+}

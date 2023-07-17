@@ -34,7 +34,7 @@ function App({signOut, user}) {
           <MenuItem color={"red"} onClick={() => signOut()}>Sign Out</MenuItem>
         </Menu>
       </View>
-      <Box w="98vw" pt="10px" pl={"20px"} pr={"20px"} m={'20px'} bg={"white"} border={"1px"} borderColor='gray.200'>
+      <Box w="95%" pt="10px" pl={"20px"} pr={"20px"} m={'20px'} bg={"white"} border={"1px"} borderColor='gray.200'>
         <Routes>
           <Route path='/users' element={<UsersPage/>} />
           <Route path='/transactions' element={<TransactionsPage/>} />

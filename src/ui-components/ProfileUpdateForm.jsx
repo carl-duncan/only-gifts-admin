@@ -6,7 +6,13 @@
 
 /* eslint-disable */
 import * as React from "react";
-import { Button, Flex, Grid, TextField } from "@aws-amplify/ui-react";
+import {
+  Button,
+  Flex,
+  Grid,
+  SwitchField,
+  TextField,
+} from "@aws-amplify/ui-react";
 import { getOverrideProps } from "@aws-amplify/ui-react/internal";
 import { Profile } from "../models";
 import { fetchByPath, validateField } from "./utils";
@@ -32,6 +38,7 @@ export default function ProfileUpdateForm(props) {
     bio: "",
     user_id: "",
     token: "",
+    banned: false,
   };
   const [display_name, setDisplay_name] = React.useState(
     initialValues.display_name
@@ -43,6 +50,7 @@ export default function ProfileUpdateForm(props) {
   const [bio, setBio] = React.useState(initialValues.bio);
   const [user_id, setUser_id] = React.useState(initialValues.user_id);
   const [token, setToken] = React.useState(initialValues.token);
+  const [banned, setBanned] = React.useState(initialValues.banned);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     const cleanValues = profileRecord
@@ -56,6 +64,7 @@ export default function ProfileUpdateForm(props) {
     setBio(cleanValues.bio);
     setUser_id(cleanValues.user_id);
     setToken(cleanValues.token);
+    setBanned(cleanValues.banned);
     setErrors({});
   };
   const [profileRecord, setProfileRecord] = React.useState(profileModelProp);
@@ -78,6 +87,7 @@ export default function ProfileUpdateForm(props) {
     bio: [],
     user_id: [{ type: "Required" }],
     token: [],
+    banned: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -113,6 +123,7 @@ export default function ProfileUpdateForm(props) {
           bio,
           user_id,
           token,
+          banned,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -176,6 +187,7 @@ export default function ProfileUpdateForm(props) {
               bio,
               user_id,
               token,
+              banned,
             };
             const result = onChange(modelFields);
             value = result?.display_name ?? value;
@@ -207,6 +219,7 @@ export default function ProfileUpdateForm(props) {
               bio,
               user_id,
               token,
+              banned,
             };
             const result = onChange(modelFields);
             value = result?.user_name ?? value;
@@ -242,6 +255,7 @@ export default function ProfileUpdateForm(props) {
               bio,
               user_id,
               token,
+              banned,
             };
             const result = onChange(modelFields);
             value = result?.balance ?? value;
@@ -273,6 +287,7 @@ export default function ProfileUpdateForm(props) {
               bio,
               user_id,
               token,
+              banned,
             };
             const result = onChange(modelFields);
             value = result?.currency ?? value;
@@ -304,6 +319,7 @@ export default function ProfileUpdateForm(props) {
               bio,
               user_id,
               token,
+              banned,
             };
             const result = onChange(modelFields);
             value = result?.url ?? value;
@@ -335,6 +351,7 @@ export default function ProfileUpdateForm(props) {
               bio: value,
               user_id,
               token,
+              banned,
             };
             const result = onChange(modelFields);
             value = result?.bio ?? value;
@@ -366,6 +383,7 @@ export default function ProfileUpdateForm(props) {
               bio,
               user_id: value,
               token,
+              banned,
             };
             const result = onChange(modelFields);
             value = result?.user_id ?? value;
@@ -397,6 +415,7 @@ export default function ProfileUpdateForm(props) {
               bio,
               user_id,
               token: value,
+              banned,
             };
             const result = onChange(modelFields);
             value = result?.token ?? value;
@@ -411,6 +430,38 @@ export default function ProfileUpdateForm(props) {
         hasError={errors.token?.hasError}
         {...getOverrideProps(overrides, "token")}
       ></TextField>
+      <SwitchField
+        label="Banned"
+        defaultChecked={false}
+        isDisabled={false}
+        isChecked={banned}
+        onChange={(e) => {
+          let value = e.target.checked;
+          if (onChange) {
+            const modelFields = {
+              display_name,
+              user_name,
+              balance,
+              currency,
+              url,
+              bio,
+              user_id,
+              token,
+              banned: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.banned ?? value;
+          }
+          if (errors.banned?.hasError) {
+            runValidationTasks("banned", value);
+          }
+          setBanned(value);
+        }}
+        onBlur={() => runValidationTasks("banned", banned)}
+        errorMessage={errors.banned?.errorMessage}
+        hasError={errors.banned?.hasError}
+        {...getOverrideProps(overrides, "banned")}
+      ></SwitchField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}

@@ -139,6 +139,13 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "banned": {
+                    "name": "banned",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -352,5 +359,5 @@ export const schema = {
     "enums": {},
     "nonModels": {},
     "codegenVersion": "3.4.4",
-    "version": "c7433f061b3cd7b34994166a332c5863"
+    "version": "f2f0f69fa0fd7e7d3ae35df010dcb3fe"
 };
