@@ -139,8 +139,14 @@ export function UsersPage(){
                                       onClick={ () => handleUnBanUser(user.id) }
                             >Unban {user.user_name}</MenuItem>
                           )}
-                          <MenuItem colorScheme='blue'>View Page</MenuItem>
-                          <MenuItem colorScheme='blue'>View Transactions</MenuItem>
+                          <MenuItem colorScheme='blue'
+                                    onClick={ () => window.open(`https://dev.only.gift/${user.user_name}`, '_blank')}
+                          >
+                            View Page
+                          </MenuItem>
+                          <MenuItem colorScheme='blue'
+                                    onClick={ () => window.location.href = `/transactions?userId=${user.user_id}`}
+                          >View Transactions</MenuItem>
                         </MenuList>
                       </Menu>
                     </Flex>

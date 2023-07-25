@@ -2,9 +2,55 @@ import { ModelInit, MutableModel, __modelMeta__, ManagedIdentifier } from "@aws-
 // @ts-ignore
 import { LazyLoading, LazyLoadingDisabled } from "@aws-amplify/datastore";
 
+export enum DisbursementStatus {
+  PENDING = "PENDING",
+  COMPLETED = "COMPLETED",
+  REJECTED = "REJECTED"
+}
+
+export enum DonationStatus {
+  PENDING = "PENDING",
+  COMPLETED = "COMPLETED",
+  REJECTED = "REJECTED"
+}
 
 
 
+type EagerBankAccount = {
+  readonly [__modelMeta__]: {
+    identifier: ManagedIdentifier<BankAccount, 'id'>;
+    readOnlyFields: 'createdAt' | 'updatedAt';
+  };
+  readonly id: string;
+  readonly bank_name: string;
+  readonly account_number: string;
+  readonly bank_branch: string;
+  readonly user_id: string;
+  readonly branch_code: string;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+type LazyBankAccount = {
+  readonly [__modelMeta__]: {
+    identifier: ManagedIdentifier<BankAccount, 'id'>;
+    readOnlyFields: 'createdAt' | 'updatedAt';
+  };
+  readonly id: string;
+  readonly bank_name: string;
+  readonly account_number: string;
+  readonly bank_branch: string;
+  readonly user_id: string;
+  readonly branch_code: string;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+export declare type BankAccount = LazyLoading extends LazyLoadingDisabled ? EagerBankAccount : LazyBankAccount
+
+export declare const BankAccount: (new (init: ModelInit<BankAccount>) => BankAccount) & {
+  copyOf(source: BankAccount, mutator: (draft: MutableModel<BankAccount>) => MutableModel<BankAccount> | void): BankAccount;
+}
 
 type EagerDeduction = {
   readonly [__modelMeta__]: {
@@ -91,6 +137,8 @@ type EagerDisbursement = {
   readonly amount: string;
   readonly user_id: string;
   readonly currency: string;
+  readonly bank_account_id: string;
+  readonly status: DisbursementStatus | keyof typeof DisbursementStatus;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -104,6 +152,8 @@ type LazyDisbursement = {
   readonly amount: string;
   readonly user_id: string;
   readonly currency: string;
+  readonly bank_account_id: string;
+  readonly status: DisbursementStatus | keyof typeof DisbursementStatus;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -126,6 +176,8 @@ type EagerDonation = {
   readonly message?: string | null;
   readonly name?: string | null;
   readonly payment_intent_id?: string | null;
+  readonly seon_score?: number | null;
+  readonly status?: DonationStatus | keyof typeof DonationStatus | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -142,6 +194,8 @@ type LazyDonation = {
   readonly message?: string | null;
   readonly name?: string | null;
   readonly payment_intent_id?: string | null;
+  readonly seon_score?: number | null;
+  readonly status?: DonationStatus | keyof typeof DonationStatus | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }

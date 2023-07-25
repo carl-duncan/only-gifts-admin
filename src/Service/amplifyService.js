@@ -1,5 +1,5 @@
 import { DataStore, Predicates } from 'aws-amplify';
-import { Donation, Profile } from '../models';
+import { Disbursement, Donation, Profile } from '../models';
 export async function getUsers(page, searchValue) {
   try {
     const limit = 5;
@@ -61,6 +61,27 @@ try {
       Profile.copyOf(profile[0], updated => {
         updated.banned = false
       }));
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function getWithdrawals(page, userId) {
+  try {
+    const limit = 8;
+    const predicate = userId === null ? Predicates.ALL : (c) => c.user_id.eq(userId);
+    const withdrawals = await DataStore.query(Disbursement,  predicate, {
+      page: page - 1,
+      limit: limit
+    });
+    const totalWithdrawals = await DataStore.query(Disbursement, predicate);
+    const totalPages = Math.ceil(totalWithdrawals.length / limit);
+
+    return {
+      withdrawals: withdrawals,
+      totalPages: totalPages,
+      totalWithdrawals: totalWithdrawals.length
+    };
   } catch (error) {
     console.error(error);
   }

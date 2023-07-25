@@ -5,7 +5,7 @@
  **************************************************************************/
 
 import * as React from "react";
-import { GridProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { GridProps, SelectFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
 import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
 export declare type ValidationResponse = {
     hasError: boolean;
@@ -16,11 +16,15 @@ export declare type DisbursementCreateFormInputValues = {
     amount?: string;
     user_id?: string;
     currency?: string;
+    bank_account_id?: string;
+    status?: string;
 };
 export declare type DisbursementCreateFormValidationValues = {
     amount?: ValidationFunction<string>;
     user_id?: ValidationFunction<string>;
     currency?: ValidationFunction<string>;
+    bank_account_id?: ValidationFunction<string>;
+    status?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type DisbursementCreateFormOverridesProps = {
@@ -28,6 +32,8 @@ export declare type DisbursementCreateFormOverridesProps = {
     amount?: PrimitiveOverrideProps<TextFieldProps>;
     user_id?: PrimitiveOverrideProps<TextFieldProps>;
     currency?: PrimitiveOverrideProps<TextFieldProps>;
+    bank_account_id?: PrimitiveOverrideProps<TextFieldProps>;
+    status?: PrimitiveOverrideProps<SelectFieldProps>;
 } & EscapeHatchProps;
 export declare type DisbursementCreateFormProps = React.PropsWithChildren<{
     overrides?: DisbursementCreateFormOverridesProps | undefined | null;

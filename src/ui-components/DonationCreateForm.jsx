@@ -6,7 +6,13 @@
 
 /* eslint-disable */
 import * as React from "react";
-import { Button, Flex, Grid, TextField } from "@aws-amplify/ui-react";
+import {
+  Button,
+  Flex,
+  Grid,
+  SelectField,
+  TextField,
+} from "@aws-amplify/ui-react";
 import { getOverrideProps } from "@aws-amplify/ui-react/internal";
 import { Donation } from "../models";
 import { fetchByPath, validateField } from "./utils";
@@ -29,6 +35,8 @@ export default function DonationCreateForm(props) {
     message: "",
     name: "",
     payment_intent_id: "",
+    seon_score: "",
+    status: "",
   };
   const [amount, setAmount] = React.useState(initialValues.amount);
   const [user_id, setUser_id] = React.useState(initialValues.user_id);
@@ -38,6 +46,8 @@ export default function DonationCreateForm(props) {
   const [payment_intent_id, setPayment_intent_id] = React.useState(
     initialValues.payment_intent_id
   );
+  const [seon_score, setSeon_score] = React.useState(initialValues.seon_score);
+  const [status, setStatus] = React.useState(initialValues.status);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     setAmount(initialValues.amount);
@@ -46,6 +56,8 @@ export default function DonationCreateForm(props) {
     setMessage(initialValues.message);
     setName(initialValues.name);
     setPayment_intent_id(initialValues.payment_intent_id);
+    setSeon_score(initialValues.seon_score);
+    setStatus(initialValues.status);
     setErrors({});
   };
   const validations = {
@@ -55,6 +67,8 @@ export default function DonationCreateForm(props) {
     message: [],
     name: [],
     payment_intent_id: [],
+    seon_score: [],
+    status: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -88,6 +102,8 @@ export default function DonationCreateForm(props) {
           message,
           name,
           payment_intent_id,
+          seon_score,
+          status,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -148,6 +164,8 @@ export default function DonationCreateForm(props) {
               message,
               name,
               payment_intent_id,
+              seon_score,
+              status,
             };
             const result = onChange(modelFields);
             value = result?.amount ?? value;
@@ -177,6 +195,8 @@ export default function DonationCreateForm(props) {
               message,
               name,
               payment_intent_id,
+              seon_score,
+              status,
             };
             const result = onChange(modelFields);
             value = result?.user_id ?? value;
@@ -206,6 +226,8 @@ export default function DonationCreateForm(props) {
               message,
               name,
               payment_intent_id,
+              seon_score,
+              status,
             };
             const result = onChange(modelFields);
             value = result?.currency ?? value;
@@ -235,6 +257,8 @@ export default function DonationCreateForm(props) {
               message: value,
               name,
               payment_intent_id,
+              seon_score,
+              status,
             };
             const result = onChange(modelFields);
             value = result?.message ?? value;
@@ -264,6 +288,8 @@ export default function DonationCreateForm(props) {
               message,
               name: value,
               payment_intent_id,
+              seon_score,
+              status,
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -293,6 +319,8 @@ export default function DonationCreateForm(props) {
               message,
               name,
               payment_intent_id: value,
+              seon_score,
+              status,
             };
             const result = onChange(modelFields);
             value = result?.payment_intent_id ?? value;
@@ -309,6 +337,88 @@ export default function DonationCreateForm(props) {
         hasError={errors.payment_intent_id?.hasError}
         {...getOverrideProps(overrides, "payment_intent_id")}
       ></TextField>
+      <TextField
+        label="Seon score"
+        isRequired={false}
+        isReadOnly={false}
+        type="number"
+        step="any"
+        value={seon_score}
+        onChange={(e) => {
+          let value = isNaN(parseInt(e.target.value))
+            ? e.target.value
+            : parseInt(e.target.value);
+          if (onChange) {
+            const modelFields = {
+              amount,
+              user_id,
+              currency,
+              message,
+              name,
+              payment_intent_id,
+              seon_score: value,
+              status,
+            };
+            const result = onChange(modelFields);
+            value = result?.seon_score ?? value;
+          }
+          if (errors.seon_score?.hasError) {
+            runValidationTasks("seon_score", value);
+          }
+          setSeon_score(value);
+        }}
+        onBlur={() => runValidationTasks("seon_score", seon_score)}
+        errorMessage={errors.seon_score?.errorMessage}
+        hasError={errors.seon_score?.hasError}
+        {...getOverrideProps(overrides, "seon_score")}
+      ></TextField>
+      <SelectField
+        label="Status"
+        placeholder="Please select an option"
+        isDisabled={false}
+        value={status}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              amount,
+              user_id,
+              currency,
+              message,
+              name,
+              payment_intent_id,
+              seon_score,
+              status: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.status ?? value;
+          }
+          if (errors.status?.hasError) {
+            runValidationTasks("status", value);
+          }
+          setStatus(value);
+        }}
+        onBlur={() => runValidationTasks("status", status)}
+        errorMessage={errors.status?.errorMessage}
+        hasError={errors.status?.hasError}
+        {...getOverrideProps(overrides, "status")}
+      >
+        <option
+          children="Pending"
+          value="PENDING"
+          {...getOverrideProps(overrides, "statusoption0")}
+        ></option>
+        <option
+          children="Completed"
+          value="COMPLETED"
+          {...getOverrideProps(overrides, "statusoption1")}
+        ></option>
+        <option
+          children="Rejected"
+          value="REJECTED"
+          {...getOverrideProps(overrides, "statusoption2")}
+        ></option>
+      </SelectField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}

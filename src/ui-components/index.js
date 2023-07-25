@@ -5,6 +5,8 @@
  **************************************************************************/
 
 export { default as studioTheme } from "./studioTheme";
+export { default as BankAccountCreateForm } from "./BankAccountCreateForm";
+export { default as BankAccountUpdateForm } from "./BankAccountUpdateForm";
 export { default as DeductionCreateForm } from "./DeductionCreateForm";
 export { default as DeductionUpdateForm } from "./DeductionUpdateForm";
 export { default as ProfileCreateForm } from "./ProfileCreateForm";

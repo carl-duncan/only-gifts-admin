@@ -10,7 +10,7 @@ import {
   Thead,
   Tr, Badge,
 } from '@chakra-ui/react';
-import { getDonations } from '../Service/amplifyService';
+import { getDonations, getWithdrawals } from '../Service/amplifyService';
 import { Pagination } from '@aws-amplify/ui-react';
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
@@ -19,21 +19,21 @@ function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
 
-export function TransactionsPage(){
-  const [users, setDonations] = useState([]);
+export function WithdrawalsPage(){
+  const [users, setWithdrawals] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
-  const [totalDonations, setTotalDonations] = useState(0);
+  const [totalWithdrawals, setTotalWithdrawals] = useState(0);
 
   let query = useQuery();
   const userId = query.get('userId');
 
   useEffect(() => {
-    getDonations(currentPage, userId).then(response => {
-      setDonations(response.donations);
+    getWithdrawals(currentPage, userId).then(response => {
+      setWithdrawals(response.withdrawals);
       setTotalPages(response.totalPages);
-      setTotalDonations(response.totalDonations);
+      setTotalWithdrawals(response.totalWithdrawals);
       setIsLoading(false);
     });
   }, [currentPage]);
@@ -46,7 +46,7 @@ export function TransactionsPage(){
   return (
     <Box>
       <Box  h={"25px"}/>
-      <Text fontSize='2xl' as='b' >Transactions ({totalDonations})</Text>
+      <Text fontSize='2xl' as='b' >Withdrawals ({totalWithdrawals})</Text>
       <Box h={"25px"}/>
       <Skeleton isLoaded={!isLoading}>
         <TableContainer>
@@ -54,9 +54,8 @@ export function TransactionsPage(){
             <Thead>
               <Tr>
                 <Th>Amount (USD)</Th>
-                <Th>Name</Th>
-                <Th>Message</Th>
-                <Th>Seon Score</Th>
+                <Th>User</Th>
+                <Th>Bank Account</Th>
                 <Th>Status</Th>
                 <Th>Sent at</Th>
               </Tr>
@@ -65,9 +64,8 @@ export function TransactionsPage(){
               {users.map(donation => (
                 <Tr key={donation.id}>
                   <Td isNumeric>{donation.amount}</Td>
-                  <Td>{donation.name}</Td>
-                  <Td>{donation.message}</Td>
-                  <Td>{donation.seon_score}</Td>
+                  <Td>{donation.user_id}</Td>
+                  <Td>{donation.bank_account_id}</Td>
                   <Td>
                     <Badge colorScheme={donation.status === 'COMPLETED' ? 'green' : 'red'}>
                       {donation.status}

@@ -6,21 +6,15 @@
 
 /* eslint-disable */
 import * as React from "react";
-import {
-  Button,
-  Flex,
-  Grid,
-  SelectField,
-  TextField,
-} from "@aws-amplify/ui-react";
+import { Button, Flex, Grid, TextField } from "@aws-amplify/ui-react";
 import { getOverrideProps } from "@aws-amplify/ui-react/internal";
-import { Disbursement } from "../models";
+import { BankAccount } from "../models";
 import { fetchByPath, validateField } from "./utils";
 import { DataStore } from "aws-amplify";
-export default function DisbursementUpdateForm(props) {
+export default function BankAccountUpdateForm(props) {
   const {
     id: idProp,
-    disbursement: disbursementModelProp,
+    bankAccount: bankAccountModelProp,
     onSuccess,
     onError,
     onSubmit,
@@ -30,50 +24,53 @@ export default function DisbursementUpdateForm(props) {
     ...rest
   } = props;
   const initialValues = {
-    amount: "",
+    bank_name: "",
+    account_number: "",
+    bank_branch: "",
     user_id: "",
-    currency: "",
-    bank_account_id: "",
-    status: "",
+    branch_code: "",
   };
-  const [amount, setAmount] = React.useState(initialValues.amount);
-  const [user_id, setUser_id] = React.useState(initialValues.user_id);
-  const [currency, setCurrency] = React.useState(initialValues.currency);
-  const [bank_account_id, setBank_account_id] = React.useState(
-    initialValues.bank_account_id
+  const [bank_name, setBank_name] = React.useState(initialValues.bank_name);
+  const [account_number, setAccount_number] = React.useState(
+    initialValues.account_number
   );
-  const [status, setStatus] = React.useState(initialValues.status);
+  const [bank_branch, setBank_branch] = React.useState(
+    initialValues.bank_branch
+  );
+  const [user_id, setUser_id] = React.useState(initialValues.user_id);
+  const [branch_code, setBranch_code] = React.useState(
+    initialValues.branch_code
+  );
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
-    const cleanValues = disbursementRecord
-      ? { ...initialValues, ...disbursementRecord }
+    const cleanValues = bankAccountRecord
+      ? { ...initialValues, ...bankAccountRecord }
       : initialValues;
-    setAmount(cleanValues.amount);
+    setBank_name(cleanValues.bank_name);
+    setAccount_number(cleanValues.account_number);
+    setBank_branch(cleanValues.bank_branch);
     setUser_id(cleanValues.user_id);
-    setCurrency(cleanValues.currency);
-    setBank_account_id(cleanValues.bank_account_id);
-    setStatus(cleanValues.status);
+    setBranch_code(cleanValues.branch_code);
     setErrors({});
   };
-  const [disbursementRecord, setDisbursementRecord] = React.useState(
-    disbursementModelProp
-  );
+  const [bankAccountRecord, setBankAccountRecord] =
+    React.useState(bankAccountModelProp);
   React.useEffect(() => {
     const queryData = async () => {
       const record = idProp
-        ? await DataStore.query(Disbursement, idProp)
-        : disbursementModelProp;
-      setDisbursementRecord(record);
+        ? await DataStore.query(BankAccount, idProp)
+        : bankAccountModelProp;
+      setBankAccountRecord(record);
     };
     queryData();
-  }, [idProp, disbursementModelProp]);
-  React.useEffect(resetStateValues, [disbursementRecord]);
+  }, [idProp, bankAccountModelProp]);
+  React.useEffect(resetStateValues, [bankAccountRecord]);
   const validations = {
-    amount: [{ type: "Required" }],
+    bank_name: [{ type: "Required" }],
+    account_number: [{ type: "Required" }],
+    bank_branch: [{ type: "Required" }],
     user_id: [{ type: "Required" }],
-    currency: [{ type: "Required" }],
-    bank_account_id: [{ type: "Required" }],
-    status: [{ type: "Required" }],
+    branch_code: [{ type: "Required" }],
   };
   const runValidationTasks = async (
     fieldName,
@@ -101,11 +98,11 @@ export default function DisbursementUpdateForm(props) {
       onSubmit={async (event) => {
         event.preventDefault();
         let modelFields = {
-          amount,
+          bank_name,
+          account_number,
+          bank_branch,
           user_id,
-          currency,
-          bank_account_id,
-          status,
+          branch_code,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -136,7 +133,7 @@ export default function DisbursementUpdateForm(props) {
             }
           });
           await DataStore.save(
-            Disbursement.copyOf(disbursementRecord, (updated) => {
+            BankAccount.copyOf(bankAccountRecord, (updated) => {
               Object.assign(updated, modelFields);
             })
           );
@@ -149,36 +146,92 @@ export default function DisbursementUpdateForm(props) {
           }
         }
       }}
-      {...getOverrideProps(overrides, "DisbursementUpdateForm")}
+      {...getOverrideProps(overrides, "BankAccountUpdateForm")}
       {...rest}
     >
       <TextField
-        label="Amount"
+        label="Bank name"
         isRequired={true}
         isReadOnly={false}
-        value={amount}
+        value={bank_name}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              amount: value,
+              bank_name: value,
+              account_number,
+              bank_branch,
               user_id,
-              currency,
-              bank_account_id,
-              status,
+              branch_code,
             };
             const result = onChange(modelFields);
-            value = result?.amount ?? value;
+            value = result?.bank_name ?? value;
           }
-          if (errors.amount?.hasError) {
-            runValidationTasks("amount", value);
+          if (errors.bank_name?.hasError) {
+            runValidationTasks("bank_name", value);
           }
-          setAmount(value);
+          setBank_name(value);
         }}
-        onBlur={() => runValidationTasks("amount", amount)}
-        errorMessage={errors.amount?.errorMessage}
-        hasError={errors.amount?.hasError}
-        {...getOverrideProps(overrides, "amount")}
+        onBlur={() => runValidationTasks("bank_name", bank_name)}
+        errorMessage={errors.bank_name?.errorMessage}
+        hasError={errors.bank_name?.hasError}
+        {...getOverrideProps(overrides, "bank_name")}
+      ></TextField>
+      <TextField
+        label="Account number"
+        isRequired={true}
+        isReadOnly={false}
+        value={account_number}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              bank_name,
+              account_number: value,
+              bank_branch,
+              user_id,
+              branch_code,
+            };
+            const result = onChange(modelFields);
+            value = result?.account_number ?? value;
+          }
+          if (errors.account_number?.hasError) {
+            runValidationTasks("account_number", value);
+          }
+          setAccount_number(value);
+        }}
+        onBlur={() => runValidationTasks("account_number", account_number)}
+        errorMessage={errors.account_number?.errorMessage}
+        hasError={errors.account_number?.hasError}
+        {...getOverrideProps(overrides, "account_number")}
+      ></TextField>
+      <TextField
+        label="Bank branch"
+        isRequired={true}
+        isReadOnly={false}
+        value={bank_branch}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              bank_name,
+              account_number,
+              bank_branch: value,
+              user_id,
+              branch_code,
+            };
+            const result = onChange(modelFields);
+            value = result?.bank_branch ?? value;
+          }
+          if (errors.bank_branch?.hasError) {
+            runValidationTasks("bank_branch", value);
+          }
+          setBank_branch(value);
+        }}
+        onBlur={() => runValidationTasks("bank_branch", bank_branch)}
+        errorMessage={errors.bank_branch?.errorMessage}
+        hasError={errors.bank_branch?.hasError}
+        {...getOverrideProps(overrides, "bank_branch")}
       ></TextField>
       <TextField
         label="User id"
@@ -189,11 +242,11 @@ export default function DisbursementUpdateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              amount,
+              bank_name,
+              account_number,
+              bank_branch,
               user_id: value,
-              currency,
-              bank_account_id,
-              status,
+              branch_code,
             };
             const result = onChange(modelFields);
             value = result?.user_id ?? value;
@@ -209,105 +262,33 @@ export default function DisbursementUpdateForm(props) {
         {...getOverrideProps(overrides, "user_id")}
       ></TextField>
       <TextField
-        label="Currency"
+        label="Branch code"
         isRequired={true}
         isReadOnly={false}
-        value={currency}
+        value={branch_code}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              amount,
+              bank_name,
+              account_number,
+              bank_branch,
               user_id,
-              currency: value,
-              bank_account_id,
-              status,
+              branch_code: value,
             };
             const result = onChange(modelFields);
-            value = result?.currency ?? value;
+            value = result?.branch_code ?? value;
           }
-          if (errors.currency?.hasError) {
-            runValidationTasks("currency", value);
+          if (errors.branch_code?.hasError) {
+            runValidationTasks("branch_code", value);
           }
-          setCurrency(value);
+          setBranch_code(value);
         }}
-        onBlur={() => runValidationTasks("currency", currency)}
-        errorMessage={errors.currency?.errorMessage}
-        hasError={errors.currency?.hasError}
-        {...getOverrideProps(overrides, "currency")}
+        onBlur={() => runValidationTasks("branch_code", branch_code)}
+        errorMessage={errors.branch_code?.errorMessage}
+        hasError={errors.branch_code?.hasError}
+        {...getOverrideProps(overrides, "branch_code")}
       ></TextField>
-      <TextField
-        label="Bank account id"
-        isRequired={true}
-        isReadOnly={false}
-        value={bank_account_id}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              amount,
-              user_id,
-              currency,
-              bank_account_id: value,
-              status,
-            };
-            const result = onChange(modelFields);
-            value = result?.bank_account_id ?? value;
-          }
-          if (errors.bank_account_id?.hasError) {
-            runValidationTasks("bank_account_id", value);
-          }
-          setBank_account_id(value);
-        }}
-        onBlur={() => runValidationTasks("bank_account_id", bank_account_id)}
-        errorMessage={errors.bank_account_id?.errorMessage}
-        hasError={errors.bank_account_id?.hasError}
-        {...getOverrideProps(overrides, "bank_account_id")}
-      ></TextField>
-      <SelectField
-        label="Status"
-        placeholder="Please select an option"
-        isDisabled={false}
-        value={status}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              amount,
-              user_id,
-              currency,
-              bank_account_id,
-              status: value,
-            };
-            const result = onChange(modelFields);
-            value = result?.status ?? value;
-          }
-          if (errors.status?.hasError) {
-            runValidationTasks("status", value);
-          }
-          setStatus(value);
-        }}
-        onBlur={() => runValidationTasks("status", status)}
-        errorMessage={errors.status?.errorMessage}
-        hasError={errors.status?.hasError}
-        {...getOverrideProps(overrides, "status")}
-      >
-        <option
-          children="Pending"
-          value="PENDING"
-          {...getOverrideProps(overrides, "statusoption0")}
-        ></option>
-        <option
-          children="Completed"
-          value="COMPLETED"
-          {...getOverrideProps(overrides, "statusoption1")}
-        ></option>
-        <option
-          children="Rejected"
-          value="REJECTED"
-          {...getOverrideProps(overrides, "statusoption2")}
-        ></option>
-      </SelectField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}
@@ -319,7 +300,7 @@ export default function DisbursementUpdateForm(props) {
             event.preventDefault();
             resetStateValues();
           }}
-          isDisabled={!(idProp || disbursementModelProp)}
+          isDisabled={!(idProp || bankAccountModelProp)}
           {...getOverrideProps(overrides, "ResetButton")}
         ></Button>
         <Flex
@@ -331,7 +312,7 @@ export default function DisbursementUpdateForm(props) {
             type="submit"
             variation="primary"
             isDisabled={
-              !(idProp || disbursementModelProp) ||
+              !(idProp || bankAccountModelProp) ||
               Object.values(errors).some((e) => e?.hasError)
             }
             {...getOverrideProps(overrides, "SubmitButton")}

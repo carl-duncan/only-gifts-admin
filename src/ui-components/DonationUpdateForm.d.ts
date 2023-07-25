@@ -5,7 +5,7 @@
  **************************************************************************/
 
 import * as React from "react";
-import { GridProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { GridProps, SelectFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
 import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
 import { Donation } from "../models";
 export declare type ValidationResponse = {
@@ -20,6 +20,8 @@ export declare type DonationUpdateFormInputValues = {
     message?: string;
     name?: string;
     payment_intent_id?: string;
+    seon_score?: number;
+    status?: string;
 };
 export declare type DonationUpdateFormValidationValues = {
     amount?: ValidationFunction<string>;
@@ -28,6 +30,8 @@ export declare type DonationUpdateFormValidationValues = {
     message?: ValidationFunction<string>;
     name?: ValidationFunction<string>;
     payment_intent_id?: ValidationFunction<string>;
+    seon_score?: ValidationFunction<number>;
+    status?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type DonationUpdateFormOverridesProps = {
@@ -38,6 +42,8 @@ export declare type DonationUpdateFormOverridesProps = {
     message?: PrimitiveOverrideProps<TextFieldProps>;
     name?: PrimitiveOverrideProps<TextFieldProps>;
     payment_intent_id?: PrimitiveOverrideProps<TextFieldProps>;
+    seon_score?: PrimitiveOverrideProps<TextFieldProps>;
+    status?: PrimitiveOverrideProps<SelectFieldProps>;
 } & EscapeHatchProps;
 export declare type DonationUpdateFormProps = React.PropsWithChildren<{
     overrides?: DonationUpdateFormOverridesProps | undefined | null;

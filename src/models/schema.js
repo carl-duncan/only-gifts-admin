@@ -1,5 +1,92 @@
 export const schema = {
     "models": {
+        "BankAccount": {
+            "name": "BankAccount",
+            "fields": {
+                "id": {
+                    "name": "id",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "bank_name": {
+                    "name": "bank_name",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "account_number": {
+                    "name": "account_number",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "bank_branch": {
+                    "name": "bank_branch",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "user_id": {
+                    "name": "user_id",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "branch_code": {
+                    "name": "branch_code",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "createdAt": {
+                    "name": "createdAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                },
+                "updatedAt": {
+                    "name": "updatedAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                }
+            },
+            "syncable": true,
+            "pluralName": "BankAccounts",
+            "attributes": [
+                {
+                    "type": "model",
+                    "properties": {}
+                },
+                {
+                    "type": "auth",
+                    "properties": {
+                        "rules": [
+                            {
+                                "allow": "public",
+                                "operations": [
+                                    "create",
+                                    "update",
+                                    "delete",
+                                    "read"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
         "Deduction": {
             "name": "Deduction",
             "fields": {
@@ -219,6 +306,22 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
+                "bank_account_id": {
+                    "name": "bank_account_id",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "status": {
+                    "name": "status",
+                    "isArray": false,
+                    "type": {
+                        "enum": "DisbursementStatus"
+                    },
+                    "isRequired": true,
+                    "attributes": []
+                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -313,6 +416,22 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "seon_score": {
+                    "name": "seon_score",
+                    "isArray": false,
+                    "type": "Int",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "status": {
+                    "name": "status",
+                    "isArray": false,
+                    "type": {
+                        "enum": "DonationStatus"
+                    },
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -356,8 +475,25 @@ export const schema = {
             ]
         }
     },
-    "enums": {},
+    "enums": {
+        "DisbursementStatus": {
+            "name": "DisbursementStatus",
+            "values": [
+                "PENDING",
+                "COMPLETED",
+                "REJECTED"
+            ]
+        },
+        "DonationStatus": {
+            "name": "DonationStatus",
+            "values": [
+                "PENDING",
+                "COMPLETED",
+                "REJECTED"
+            ]
+        }
+    },
     "nonModels": {},
     "codegenVersion": "3.4.4",
-    "version": "f2f0f69fa0fd7e7d3ae35df010dcb3fe"
+    "version": "c983c3b4e9d99f170bb4f88d2f5be4c1"
 };
