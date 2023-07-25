@@ -10,6 +10,7 @@ import { UsersPage } from './Page/UsersPage';
 import { TransactionsPage } from './Page/TransactionsPage';
 import theme from './theme/theme';
 import { WithdrawalsPage } from './Page/WithdrawalsPage';
+import { HomePage } from './Page/HomePage';
 
 function App({signOut, user}) {
   const navigate = useNavigate();
@@ -38,6 +39,7 @@ function App({signOut, user}) {
             <Route path='/users' element={<UsersPage/>} />
             <Route path='/transactions' element={<TransactionsPage/>} />
             <Route path='/withdrawals' element={<WithdrawalsPage/>} />
+            <Route path='/' element={<HomePage/>} />
           </Routes>
         </Box>
         <Box paddingTop={"0.5em"} paddingBottom={"0.5em"} border={"1px"} borderColor='gray.200' bg={"white"}>

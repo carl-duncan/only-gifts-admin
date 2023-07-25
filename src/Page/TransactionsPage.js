@@ -20,7 +20,8 @@ function useQuery() {
 }
 
 export function TransactionsPage(){
-  const [users, setDonations] = useState([]);
+  const [donations, setDonations] = useState([]);
+  const [profiles, setProfiles] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
@@ -35,6 +36,7 @@ export function TransactionsPage(){
   useEffect(() => {
     getDonations(currentPage, userId, status).then(response => {
       setDonations(response.donations);
+      setProfiles(response.profiles);
       setTotalPages(response.totalPages);
       setTotalDonations(response.totalDonations);
       setIsLoading(false);
@@ -51,6 +53,7 @@ export function TransactionsPage(){
     setIsLoading(true);
     getDonations(currentPage, userId, status).then(response => {
       setDonations(response.donations);
+      setProfiles(response.profiles);
       setTotalPages(response.totalPages);
       setTotalDonations(response.totalDonations);
       setIsLoading(false);
@@ -104,20 +107,26 @@ export function TransactionsPage(){
               </Tr>
             </Thead>
             <Tbody>
-              {users.map(donation => (
-                <Tr key={donation.id}>
-                  <Td isNumeric>{donation.amount}</Td>
-                  <Td>{donation.user_id}</Td>
-                  <Td>{donation.seon_score}</Td>
-                  <Td>
-                    <Badge colorScheme={donation.status === 'COMPLETED' ? 'green' : 'red'}>
-                      {donation.status}
-                    </Badge>
-                  </Td>
-                  <Td>{donation.createdAt}</Td>
-                </Tr>
-              ))}
+              {donations.map((donation, i) => {
+                const profile = profiles[i];
+                return (
+                  <Tr key={donation.id}>
+                    <Td>{donation.amount}</Td>
+                    <Td>{profile.user_name} ({profile.display_name})</Td>
+                    <Td>{donation.seon_score}</Td>
+                    <Td>
+                      <Badge
+                        colorScheme={donation.status === 'COMPLETED' ? 'green' : 'red'}
+                      >
+                        {donation.status}
+                      </Badge>
+                    </Td>
+                    <Td>{donation.createdAt}</Td>
+                  </Tr>
+                );
+              })}
             </Tbody>
+
           </Table>
         </TableContainer>
       </Skeleton>

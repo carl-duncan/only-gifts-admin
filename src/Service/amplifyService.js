@@ -1,5 +1,6 @@
 import { DataStore, Predicates } from 'aws-amplify';
 import { Disbursement, Donation, DonationStatus, Profile } from '../models';
+
 export async function getUsers(page, searchValue) {
   try {
     const limit = 5;
@@ -43,8 +44,15 @@ export async function getDonations(page, userId, status) {
     const totalDonations = await DataStore.query(Donation, predicate);
     const totalPages = Math.ceil(totalDonations.length / limit);
 
+    let profiles = [];
+    for (let i = 0; i < donations.length; i++) {
+      let profile = await getProfileById(donations[i].user_id);
+      profiles.push(profile);
+    }
+
     return {
       donations: donations,
+      profiles: profiles,
       totalPages: totalPages,
       totalDonations: totalDonations.length
     };
@@ -88,11 +96,27 @@ export async function getWithdrawals(page, userId) {
     const totalWithdrawals = await DataStore.query(Disbursement, predicate);
     const totalPages = Math.ceil(totalWithdrawals.length / limit);
 
+    let profiles = [];
+    for (let i = 0; i < withdrawals.length; i++) {
+      let profile = await getProfileById(withdrawals[i].user_id);
+      profiles.push(profile);
+    }
+
     return {
       withdrawals: withdrawals,
+      profiles: profiles,
       totalPages: totalPages,
       totalWithdrawals: totalWithdrawals.length
     };
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function getProfileById(userId) {
+  try {
+    const profile = await DataStore.query(Profile, (c) => c.user_id.eq(userId));
+    return profile[0];
   } catch (error) {
     console.error(error);
   }

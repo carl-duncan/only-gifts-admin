@@ -20,7 +20,8 @@ function useQuery() {
 }
 
 export function WithdrawalsPage(){
-  const [users, setWithdrawals] = useState([]);
+  const [withdrawals, setWithdrawals] = useState([]);
+  const [profiles, setProfiles] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
@@ -32,6 +33,7 @@ export function WithdrawalsPage(){
   useEffect(() => {
     getWithdrawals(currentPage, userId).then(response => {
       setWithdrawals(response.withdrawals);
+      setProfiles(response.profiles);
       setTotalPages(response.totalPages);
       setTotalWithdrawals(response.totalWithdrawals);
       setIsLoading(false);
@@ -61,10 +63,12 @@ export function WithdrawalsPage(){
               </Tr>
             </Thead>
             <Tbody>
-              {users.map(donation => (
+              {withdrawals.map((donation,i) =>{
+                const profile = profiles[i];
+                return (
                 <Tr key={donation.id}>
                   <Td isNumeric>{donation.amount}</Td>
-                  <Td>{donation.user_id}</Td>
+                  <Td>{profile.user_name} ({profile.display_name})</Td>
                   <Td>{donation.bank_account_id}</Td>
                   <Td>
                     <Badge colorScheme={donation.status === 'COMPLETED' ? 'green' : 'red'}>
@@ -73,7 +77,8 @@ export function WithdrawalsPage(){
                   </Td>
                   <Td>{donation.createdAt}</Td>
                 </Tr>
-              ))}
+              );
+              })}
             </Tbody>
           </Table>
         </TableContainer>
