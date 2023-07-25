@@ -8,12 +8,12 @@ import {
   Td,
   Th,
   Thead,
-  Tr, Badge,
+  Tr, Badge, ButtonGroup, Button,
 } from '@chakra-ui/react';
 import { getDonations } from '../Service/amplifyService';
 import { Pagination } from '@aws-amplify/ui-react';
 import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -25,12 +25,15 @@ export function TransactionsPage(){
   const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [totalDonations, setTotalDonations] = useState(0);
+  const navigate = useNavigate();
+
 
   let query = useQuery();
   const userId = query.get('userId');
+  const status = query.get('status');
 
   useEffect(() => {
-    getDonations(currentPage, userId).then(response => {
+    getDonations(currentPage, userId, status).then(response => {
       setDonations(response.donations);
       setTotalPages(response.totalPages);
       setTotalDonations(response.totalDonations);
@@ -43,19 +46,58 @@ export function TransactionsPage(){
     setIsLoading(true);
   };
 
+  const handleStatusChange = (status) => {
+    navigate(`/transactions?status=${status}`);
+    setIsLoading(true);
+    getDonations(currentPage, userId, status).then(response => {
+      setDonations(response.donations);
+      setTotalPages(response.totalPages);
+      setTotalDonations(response.totalDonations);
+      setIsLoading(false);
+    });
+  }
+
   return (
     <Box>
       <Box  h={"25px"}/>
       <Text fontSize='2xl' as='b' >Transactions ({totalDonations})</Text>
       <Box h={"25px"}/>
+
+      <Box
+        display='flex'
+        flexDirection='row'
+        alignItems='center'
+      >
+        <Text fontSize='md' as='sb' color={'grey'} >Filter:</Text>
+        <Box w={"20px"}/>
+        <ButtonGroup>
+          <Button
+            variant={'outline'}
+            colorScheme='blue'
+            onClick={() => handleStatusChange('pending')}
+          >Pending</Button>
+          <Button
+            variant={'outline'}
+            colorScheme='green'
+            onClick={() => handleStatusChange('completed')}
+          >Completed</Button>
+          <Button
+            variant={'outline'}
+            colorScheme='red'
+            onClick={() => handleStatusChange('rejected')}
+          >Rejected</Button>
+        </ButtonGroup>
+      </Box>
+
+      <Box h={"25px"}/>
+
       <Skeleton isLoaded={!isLoading}>
         <TableContainer>
           <Table variant={'striped'}>
             <Thead>
               <Tr>
                 <Th>Amount (USD)</Th>
-                <Th>Name</Th>
-                <Th>Message</Th>
+                <Th>Receiver</Th>
                 <Th>Seon Score</Th>
                 <Th>Status</Th>
                 <Th>Sent at</Th>
@@ -65,8 +107,7 @@ export function TransactionsPage(){
               {users.map(donation => (
                 <Tr key={donation.id}>
                   <Td isNumeric>{donation.amount}</Td>
-                  <Td>{donation.name}</Td>
-                  <Td>{donation.message}</Td>
+                  <Td>{donation.user_id}</Td>
                   <Td>{donation.seon_score}</Td>
                   <Td>
                     <Badge colorScheme={donation.status === 'COMPLETED' ? 'green' : 'red'}>

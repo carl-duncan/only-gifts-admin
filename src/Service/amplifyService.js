@@ -1,5 +1,5 @@
 import { DataStore, Predicates } from 'aws-amplify';
-import { Disbursement, Donation, Profile } from '../models';
+import { Disbursement, Donation, DonationStatus, Profile } from '../models';
 export async function getUsers(page, searchValue) {
   try {
     const limit = 5;
@@ -21,10 +21,21 @@ export async function getUsers(page, searchValue) {
   }
 }
 
-export async function getDonations(page, userId) {
+export async function getDonations(page, userId, status) {
   try {
     const limit = 8;
-    const predicate = userId === null ? Predicates.ALL : (c) => c.user_id.eq(userId);
+    let statusEnum = null;
+    if (status === 'pending') {
+      statusEnum = DonationStatus.PENDING;
+    }
+    if (status === 'completed') {
+      statusEnum = DonationStatus.COMPLETED;
+    }
+
+    if (status === 'rejected') {
+      statusEnum = DonationStatus.REJECTED;
+    }
+    const predicate = userId === null && status === null ? Predicates.ALL : userId === null && status !== null ? (c) => c.status.eq(statusEnum) : userId !== null && status === null ? (c) => c.user_id.eq(userId) : (c) => c.user_id.eq(userId).and(c.status.eq(statusEnum));
     const donations = await DataStore.query(Donation,  predicate, {
       page: page - 1,
       limit: limit
