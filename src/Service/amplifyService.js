@@ -1,5 +1,6 @@
 import { DataStore, Predicates } from 'aws-amplify';
 import { Disbursement, Donation, DonationStatus, Profile, Statistic } from '../models';
+import axios from 'axios';
 
 export async function getUsers(page, searchValue) {
   try {
@@ -45,14 +46,18 @@ export async function getDonations(page, userId, status) {
     const totalPages = Math.ceil(totalDonations.length / limit);
 
     let profiles = [];
+    let risk_profiles = [];
     for (let i = 0; i < donations.length; i++) {
       let profile = await getProfileById(donations[i].user_id);
+      let risk_profile = await getRiskLevel(donations[i].payment_intent_id);
       profiles.push(profile);
+      risk_profiles.push(risk_profile);
     }
 
     return {
       donations: donations,
       profiles: profiles,
+      risk_profiles: risk_profiles,
       totalPages: totalPages,
       totalDonations: totalDonations.length
     };
@@ -131,3 +136,12 @@ export async function getStatistics() {
     console.error(error);
   }
 }
+
+export async function getRiskLevel(paymentIntentId) {
+  const response = await axios.post('https://thko2dsyse4xnkevukfscjhuky0zxcis.lambda-url.us-east-1.on.aws/', {
+    paymentIntentId: paymentIntentId
+  });
+
+  return response.data;
+}
+

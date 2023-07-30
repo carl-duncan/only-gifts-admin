@@ -22,6 +22,7 @@ function useQuery() {
 export function TransactionsPage(){
   const [donations, setDonations] = useState([]);
   const [profiles, setProfiles] = useState([]);
+  const [riskProfiles, setRiskProfiles] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
@@ -37,6 +38,7 @@ export function TransactionsPage(){
     getDonations(currentPage, userId, status).then(response => {
       setDonations(response.donations);
       setProfiles(response.profiles);
+      setRiskProfiles(response.risk_profiles);
       setTotalPages(response.totalPages);
       setTotalDonations(response.totalDonations);
       setIsLoading(false);
@@ -110,12 +112,13 @@ export function TransactionsPage(){
             <Tbody>
               {donations.map((donation, i) => {
                 const profile = profiles[i];
+                const risk_profile = riskProfiles[i];
                 return (
                   <Tr key={donation.id}>
                     <Td>{donation.amount}</Td>
                     <Td>{profile.user_name} ({profile.display_name})</Td>
                     <Td>{donation.seon_score}</Td>
-                    <Td>0</Td>
+                    <Td> {risk_profile}</Td>
                     <Td>
                       <Badge
                         colorScheme={donation.status === 'COMPLETED' ? 'green' : 'red'}
