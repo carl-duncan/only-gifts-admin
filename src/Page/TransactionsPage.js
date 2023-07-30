@@ -102,6 +102,7 @@ export function TransactionsPage(){
                 <Th>Amount (USD)</Th>
                 <Th>Receiver</Th>
                 <Th>Seon Score</Th>
+                <Th>Radar Score</Th>
                 <Th>Status</Th>
                 <Th>Sent at</Th>
               </Tr>
@@ -114,6 +115,7 @@ export function TransactionsPage(){
                     <Td>{donation.amount}</Td>
                     <Td>{profile.user_name} ({profile.display_name})</Td>
                     <Td>{donation.seon_score}</Td>
+                    <Td>0</Td>
                     <Td>
                       <Badge
                         colorScheme={donation.status === 'COMPLETED' ? 'green' : 'red'}

@@ -5,6 +5,8 @@
  **************************************************************************/
 
 export { default as studioTheme } from "./studioTheme";
+export { default as StatisticCreateForm } from "./StatisticCreateForm";
+export { default as StatisticUpdateForm } from "./StatisticUpdateForm";
 export { default as BankAccountCreateForm } from "./BankAccountCreateForm";
 export { default as BankAccountUpdateForm } from "./BankAccountUpdateForm";
 export { default as DeductionCreateForm } from "./DeductionCreateForm";

@@ -14,9 +14,10 @@ const DonationStatus = {
   "REJECTED": "REJECTED"
 };
 
-const { BankAccount, Deduction, Profile, Disbursement, Donation } = initSchema(schema);
+const { Statistic, BankAccount, Deduction, Profile, Disbursement, Donation } = initSchema(schema);
 
 export {
+  Statistic,
   BankAccount,
   Deduction,
   Profile,

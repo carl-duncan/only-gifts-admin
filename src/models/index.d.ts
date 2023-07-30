@@ -16,6 +16,38 @@ export enum DonationStatus {
 
 
 
+type EagerStatistic = {
+  readonly [__modelMeta__]: {
+    identifier: ManagedIdentifier<Statistic, 'id'>;
+    readOnlyFields: 'createdAt' | 'updatedAt';
+  };
+  readonly id: string;
+  readonly name: string;
+  readonly value: number;
+  readonly code: string;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+type LazyStatistic = {
+  readonly [__modelMeta__]: {
+    identifier: ManagedIdentifier<Statistic, 'id'>;
+    readOnlyFields: 'createdAt' | 'updatedAt';
+  };
+  readonly id: string;
+  readonly name: string;
+  readonly value: number;
+  readonly code: string;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+export declare type Statistic = LazyLoading extends LazyLoadingDisabled ? EagerStatistic : LazyStatistic
+
+export declare const Statistic: (new (init: ModelInit<Statistic>) => Statistic) & {
+  copyOf(source: Statistic, mutator: (draft: MutableModel<Statistic>) => MutableModel<Statistic> | void): Statistic;
+}
+
 type EagerBankAccount = {
   readonly [__modelMeta__]: {
     identifier: ManagedIdentifier<BankAccount, 'id'>;

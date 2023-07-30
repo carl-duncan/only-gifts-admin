@@ -1,5 +1,5 @@
 import { DataStore, Predicates } from 'aws-amplify';
-import { Disbursement, Donation, DonationStatus, Profile } from '../models';
+import { Disbursement, Donation, DonationStatus, Profile, Statistic } from '../models';
 
 export async function getUsers(page, searchValue) {
   try {
@@ -118,6 +118,16 @@ export async function getProfileById(userId) {
     const profile = await DataStore.query(Profile, (c) => c.user_id.eq(userId));
     return profile[0];
   } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function getStatistics() {
+  try {
+    return {
+      statistics: await DataStore.query(Statistic),
+  }
+  }catch (error) {
     console.error(error);
   }
 }
