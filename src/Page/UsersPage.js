@@ -22,6 +22,10 @@ export function UsersPage(){
   const [isLoading, setIsLoading] = useState(true);
   const [totalUsers, setTotalUsers] = useState(0);
   const toast = useToast();
+  let currencyFormatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  });
 
 
   useEffect(() => {
@@ -113,7 +117,7 @@ export function UsersPage(){
                 <Tr key={user.id}>
                   <Td>{user.user_name}</Td>
                   <Td>{user.display_name}</Td>
-                  <Td>{user.balance}</Td>
+                  <Td>{currencyFormatter.format(user.balance)}</Td>
                   <Td>{user.createdAt}</Td>
                   <Td>
                     <Badge colorScheme={!user.banned ? 'green' : 'red'}>

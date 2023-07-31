@@ -26,6 +26,11 @@ export function WithdrawalsPage(){
   const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [totalWithdrawals, setTotalWithdrawals] = useState(0);
+  let currencyFormatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  });
+
 
   let query = useQuery();
   const userId = query.get('userId');
@@ -67,7 +72,7 @@ export function WithdrawalsPage(){
                 const profile = profiles[i];
                 return (
                 <Tr key={donation.id}>
-                  <Td isNumeric>{donation.amount}</Td>
+                  <Td isNumeric>{currencyFormatter.format(donation.amount)}</Td>
                   <Td>{profile.user_name} ({profile.display_name})</Td>
                   <Td>{donation.bank_account_id}</Td>
                   <Td>

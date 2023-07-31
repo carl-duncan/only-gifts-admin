@@ -28,7 +28,10 @@ export function TransactionsPage(){
   const [isLoading, setIsLoading] = useState(true);
   const [totalDonations, setTotalDonations] = useState(0);
   const navigate = useNavigate();
-
+  let currencyFormatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  });
 
   let query = useQuery();
   const userId = query.get('userId');
@@ -115,7 +118,7 @@ export function TransactionsPage(){
                 const risk_profile = riskProfiles[i];
                 return (
                   <Tr key={donation.id}>
-                    <Td>{donation.amount}</Td>
+                    <Td>{currencyFormatter.format(donation.amount)}</Td>
                     <Td>{profile.user_name} ({profile.display_name})</Td>
                     <Td>{donation.seon_score}</Td>
                     <Td> {risk_profile}</Td>
