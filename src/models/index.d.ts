@@ -171,6 +171,7 @@ type EagerDisbursement = {
   readonly currency: string;
   readonly bank_account_id: string;
   readonly status: DisbursementStatus | keyof typeof DisbursementStatus;
+  readonly withdrawal_date?: string | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -186,6 +187,7 @@ type LazyDisbursement = {
   readonly currency: string;
   readonly bank_account_id: string;
   readonly status: DisbursementStatus | keyof typeof DisbursementStatus;
+  readonly withdrawal_date?: string | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -210,6 +212,7 @@ type EagerDonation = {
   readonly payment_intent_id?: string | null;
   readonly seon_score?: number | null;
   readonly status?: DonationStatus | keyof typeof DonationStatus | null;
+  readonly payment_method_id?: string | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -228,6 +231,7 @@ type LazyDonation = {
   readonly payment_intent_id?: string | null;
   readonly seon_score?: number | null;
   readonly status?: DonationStatus | keyof typeof DonationStatus | null;
+  readonly payment_method_id?: string | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }

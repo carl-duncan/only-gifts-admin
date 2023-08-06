@@ -38,6 +38,7 @@ export default function DonationUpdateForm(props) {
     payment_intent_id: "",
     seon_score: "",
     status: "",
+    payment_method_id: "",
   };
   const [amount, setAmount] = React.useState(initialValues.amount);
   const [user_id, setUser_id] = React.useState(initialValues.user_id);
@@ -49,6 +50,9 @@ export default function DonationUpdateForm(props) {
   );
   const [seon_score, setSeon_score] = React.useState(initialValues.seon_score);
   const [status, setStatus] = React.useState(initialValues.status);
+  const [payment_method_id, setPayment_method_id] = React.useState(
+    initialValues.payment_method_id
+  );
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     const cleanValues = donationRecord
@@ -62,6 +66,7 @@ export default function DonationUpdateForm(props) {
     setPayment_intent_id(cleanValues.payment_intent_id);
     setSeon_score(cleanValues.seon_score);
     setStatus(cleanValues.status);
+    setPayment_method_id(cleanValues.payment_method_id);
     setErrors({});
   };
   const [donationRecord, setDonationRecord] = React.useState(donationModelProp);
@@ -84,6 +89,7 @@ export default function DonationUpdateForm(props) {
     payment_intent_id: [],
     seon_score: [],
     status: [],
+    payment_method_id: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -119,6 +125,7 @@ export default function DonationUpdateForm(props) {
           payment_intent_id,
           seon_score,
           status,
+          payment_method_id,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -182,6 +189,7 @@ export default function DonationUpdateForm(props) {
               payment_intent_id,
               seon_score,
               status,
+              payment_method_id,
             };
             const result = onChange(modelFields);
             value = result?.amount ?? value;
@@ -213,6 +221,7 @@ export default function DonationUpdateForm(props) {
               payment_intent_id,
               seon_score,
               status,
+              payment_method_id,
             };
             const result = onChange(modelFields);
             value = result?.user_id ?? value;
@@ -244,6 +253,7 @@ export default function DonationUpdateForm(props) {
               payment_intent_id,
               seon_score,
               status,
+              payment_method_id,
             };
             const result = onChange(modelFields);
             value = result?.currency ?? value;
@@ -275,6 +285,7 @@ export default function DonationUpdateForm(props) {
               payment_intent_id,
               seon_score,
               status,
+              payment_method_id,
             };
             const result = onChange(modelFields);
             value = result?.message ?? value;
@@ -306,6 +317,7 @@ export default function DonationUpdateForm(props) {
               payment_intent_id,
               seon_score,
               status,
+              payment_method_id,
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -337,6 +349,7 @@ export default function DonationUpdateForm(props) {
               payment_intent_id: value,
               seon_score,
               status,
+              payment_method_id,
             };
             const result = onChange(modelFields);
             value = result?.payment_intent_id ?? value;
@@ -374,6 +387,7 @@ export default function DonationUpdateForm(props) {
               payment_intent_id,
               seon_score: value,
               status,
+              payment_method_id,
             };
             const result = onChange(modelFields);
             value = result?.seon_score ?? value;
@@ -405,6 +419,7 @@ export default function DonationUpdateForm(props) {
               payment_intent_id,
               seon_score,
               status: value,
+              payment_method_id,
             };
             const result = onChange(modelFields);
             value = result?.status ?? value;
@@ -435,6 +450,40 @@ export default function DonationUpdateForm(props) {
           {...getOverrideProps(overrides, "statusoption2")}
         ></option>
       </SelectField>
+      <TextField
+        label="Payment method id"
+        isRequired={false}
+        isReadOnly={false}
+        value={payment_method_id}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              amount,
+              user_id,
+              currency,
+              message,
+              name,
+              payment_intent_id,
+              seon_score,
+              status,
+              payment_method_id: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.payment_method_id ?? value;
+          }
+          if (errors.payment_method_id?.hasError) {
+            runValidationTasks("payment_method_id", value);
+          }
+          setPayment_method_id(value);
+        }}
+        onBlur={() =>
+          runValidationTasks("payment_method_id", payment_method_id)
+        }
+        errorMessage={errors.payment_method_id?.errorMessage}
+        hasError={errors.payment_method_id?.hasError}
+        {...getOverrideProps(overrides, "payment_method_id")}
+      ></TextField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}

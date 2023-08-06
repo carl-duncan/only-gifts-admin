@@ -34,6 +34,7 @@ export default function DisbursementCreateForm(props) {
     currency: "",
     bank_account_id: "",
     status: "",
+    withdrawal_date: "",
   };
   const [amount, setAmount] = React.useState(initialValues.amount);
   const [user_id, setUser_id] = React.useState(initialValues.user_id);
@@ -42,6 +43,9 @@ export default function DisbursementCreateForm(props) {
     initialValues.bank_account_id
   );
   const [status, setStatus] = React.useState(initialValues.status);
+  const [withdrawal_date, setWithdrawal_date] = React.useState(
+    initialValues.withdrawal_date
+  );
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     setAmount(initialValues.amount);
@@ -49,6 +53,7 @@ export default function DisbursementCreateForm(props) {
     setCurrency(initialValues.currency);
     setBank_account_id(initialValues.bank_account_id);
     setStatus(initialValues.status);
+    setWithdrawal_date(initialValues.withdrawal_date);
     setErrors({});
   };
   const validations = {
@@ -57,6 +62,7 @@ export default function DisbursementCreateForm(props) {
     currency: [{ type: "Required" }],
     bank_account_id: [{ type: "Required" }],
     status: [{ type: "Required" }],
+    withdrawal_date: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -75,6 +81,23 @@ export default function DisbursementCreateForm(props) {
     setErrors((errors) => ({ ...errors, [fieldName]: validationResponse }));
     return validationResponse;
   };
+  const convertToLocal = (date) => {
+    const df = new Intl.DateTimeFormat("default", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      calendar: "iso8601",
+      numberingSystem: "latn",
+      hourCycle: "h23",
+    });
+    const parts = df.formatToParts(date).reduce((acc, part) => {
+      acc[part.type] = part.value;
+      return acc;
+    }, {});
+    return `${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}`;
+  };
   return (
     <Grid
       as="form"
@@ -89,6 +112,7 @@ export default function DisbursementCreateForm(props) {
           currency,
           bank_account_id,
           status,
+          withdrawal_date,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -148,6 +172,7 @@ export default function DisbursementCreateForm(props) {
               currency,
               bank_account_id,
               status,
+              withdrawal_date,
             };
             const result = onChange(modelFields);
             value = result?.amount ?? value;
@@ -176,6 +201,7 @@ export default function DisbursementCreateForm(props) {
               currency,
               bank_account_id,
               status,
+              withdrawal_date,
             };
             const result = onChange(modelFields);
             value = result?.user_id ?? value;
@@ -204,6 +230,7 @@ export default function DisbursementCreateForm(props) {
               currency: value,
               bank_account_id,
               status,
+              withdrawal_date,
             };
             const result = onChange(modelFields);
             value = result?.currency ?? value;
@@ -232,6 +259,7 @@ export default function DisbursementCreateForm(props) {
               currency,
               bank_account_id: value,
               status,
+              withdrawal_date,
             };
             const result = onChange(modelFields);
             value = result?.bank_account_id ?? value;
@@ -260,6 +288,7 @@ export default function DisbursementCreateForm(props) {
               currency,
               bank_account_id,
               status: value,
+              withdrawal_date,
             };
             const result = onChange(modelFields);
             value = result?.status ?? value;
@@ -290,6 +319,37 @@ export default function DisbursementCreateForm(props) {
           {...getOverrideProps(overrides, "statusoption2")}
         ></option>
       </SelectField>
+      <TextField
+        label="Withdrawal date"
+        isRequired={false}
+        isReadOnly={false}
+        type="datetime-local"
+        value={withdrawal_date && convertToLocal(new Date(withdrawal_date))}
+        onChange={(e) => {
+          let value =
+            e.target.value === "" ? "" : new Date(e.target.value).toISOString();
+          if (onChange) {
+            const modelFields = {
+              amount,
+              user_id,
+              currency,
+              bank_account_id,
+              status,
+              withdrawal_date: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.withdrawal_date ?? value;
+          }
+          if (errors.withdrawal_date?.hasError) {
+            runValidationTasks("withdrawal_date", value);
+          }
+          setWithdrawal_date(value);
+        }}
+        onBlur={() => runValidationTasks("withdrawal_date", withdrawal_date)}
+        errorMessage={errors.withdrawal_date?.errorMessage}
+        hasError={errors.withdrawal_date?.hasError}
+        {...getOverrideProps(overrides, "withdrawal_date")}
+      ></TextField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}

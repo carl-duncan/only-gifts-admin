@@ -395,6 +395,13 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
+                "withdrawal_date": {
+                    "name": "withdrawal_date",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -505,6 +512,13 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "payment_method_id": {
+                    "name": "payment_method_id",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -568,5 +582,5 @@ export const schema = {
     },
     "nonModels": {},
     "codegenVersion": "3.4.4",
-    "version": "283be08d4b563121b4f2c07d08ab392a"
+    "version": "c9757ead40d5dcc50d6b2a88574ef72b"
 };

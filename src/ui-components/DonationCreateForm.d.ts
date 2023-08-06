@@ -21,6 +21,7 @@ export declare type DonationCreateFormInputValues = {
     payment_intent_id?: string;
     seon_score?: number;
     status?: string;
+    payment_method_id?: string;
 };
 export declare type DonationCreateFormValidationValues = {
     amount?: ValidationFunction<string>;
@@ -31,6 +32,7 @@ export declare type DonationCreateFormValidationValues = {
     payment_intent_id?: ValidationFunction<string>;
     seon_score?: ValidationFunction<number>;
     status?: ValidationFunction<string>;
+    payment_method_id?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type DonationCreateFormOverridesProps = {
@@ -43,6 +45,7 @@ export declare type DonationCreateFormOverridesProps = {
     payment_intent_id?: PrimitiveOverrideProps<TextFieldProps>;
     seon_score?: PrimitiveOverrideProps<TextFieldProps>;
     status?: PrimitiveOverrideProps<SelectFieldProps>;
+    payment_method_id?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type DonationCreateFormProps = React.PropsWithChildren<{
     overrides?: DonationCreateFormOverridesProps | undefined | null;

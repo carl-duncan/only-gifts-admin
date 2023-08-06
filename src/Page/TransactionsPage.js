@@ -8,12 +8,15 @@ import {
   Td,
   Th,
   Thead,
-  Tr, Badge, ButtonGroup, Button,
+  Tr, Badge, ButtonGroup, Button, Flex, Menu, MenuButton, MenuList, MenuItem, useToast,
 } from '@chakra-ui/react';
-import { getDonations } from '../Service/amplifyService';
+import { getDonations, saveDonation } from '../Service/amplifyService';
 import { Pagination } from '@aws-amplify/ui-react';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { BiChevronDown } from 'react-icons/all';
+import { confirmPaymentIntent } from '../Service/stripeService';
+import { Donation, DonationStatus } from '../models';
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -36,6 +39,7 @@ export function TransactionsPage(){
   let query = useQuery();
   const userId = query.get('userId');
   const status = query.get('status');
+  let toast = useToast();
 
   useEffect(() => {
     getDonations(currentPage, userId, status).then(response => {
@@ -62,6 +66,63 @@ export function TransactionsPage(){
       setTotalPages(response.totalPages);
       setTotalDonations(response.totalDonations);
       setIsLoading(false);
+    });
+  }
+
+  const acceptTransaction = (donation) => {
+    confirmPaymentIntent(donation.payment_intent_id, donation.payment_method_id).then(response => {
+      if (response.status === 200){
+        saveDonation(
+          Donation.copyOf(donation, updated => {
+            updated.status = DonationStatus.COMPLETED
+          })).then(_ => {
+          toast({
+            title: 'Transaction successfully confirmed.',
+            status: 'info',
+            duration: 5000,
+            isClosable: true,
+          });
+          setIsLoading(true);
+          getDonations(currentPage, userId, status).then(response => {
+            setDonations(response.donations);
+            setProfiles(response.profiles);
+            setTotalPages(response.totalPages);
+            setTotalDonations(response.totalDonations);
+            setIsLoading(false);
+          });
+        });
+      } else {
+        toast({
+          title: response.message,
+          status: 'info',
+          duration: 5000,
+          isClosable: true,
+        });
+      }
+    });
+  }
+
+  const rejectTransaction = (donation) => {
+    saveDonation(
+      Donation.copyOf(donation, updated => {
+        updated.status = DonationStatus.REJECTED
+      }
+      )).then(_ => {
+      toast({
+        title: 'Transaction successfully rejected.',
+        status: 'info',
+        duration: 5000,
+        isClosable: true,
+      });
+      setIsLoading(true);
+      getDonations(currentPage, userId, status).then(response => {
+        setDonations(response.donations);
+        setProfiles(response.profiles);
+        setTotalPages(response.totalPages);
+        setTotalDonations(response.totalDonations);
+        setIsLoading(false);
+      });
+
     });
   }
 
@@ -130,6 +191,31 @@ export function TransactionsPage(){
                       </Badge>
                     </Td>
                     <Td>{donation.createdAt}</Td>
+                    <Td>
+                      <Flex justifyContent="flex-end">
+                        <Menu>
+                          <MenuButton as={Button} rightIcon={<BiChevronDown />}>
+                            Actions
+                          </MenuButton>
+                          <MenuList>
+
+                            {donation.status === 'PENDING' && (
+                              <MenuItem colorScheme='red' onClick={
+                                () => acceptTransaction(donation)
+                              }>Accept Transaction</MenuItem>
+                            )}
+
+                            {donation.status === 'PENDING' && (
+                              <MenuItem colorScheme='red' onClick={
+                                () => rejectTransaction(donation)
+                              }>Reject Transaction</MenuItem>
+                            )}
+
+
+                          </MenuList>
+                        </Menu>
+                      </Flex>
+                    </Td>
                   </Tr>
                 );
               })}

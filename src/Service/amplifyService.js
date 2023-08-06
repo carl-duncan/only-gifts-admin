@@ -145,3 +145,12 @@ export async function getRiskLevel(paymentIntentId) {
   return response.data;
 }
 
+export async function saveDonation(donation) {
+  try {
+    await DataStore.save(
+      donation);
+  } catch (error) {
+    console.error(error);
+  }
+}
+

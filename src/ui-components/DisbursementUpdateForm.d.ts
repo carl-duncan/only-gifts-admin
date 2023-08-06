@@ -19,6 +19,7 @@ export declare type DisbursementUpdateFormInputValues = {
     currency?: string;
     bank_account_id?: string;
     status?: string;
+    withdrawal_date?: string;
 };
 export declare type DisbursementUpdateFormValidationValues = {
     amount?: ValidationFunction<string>;
@@ -26,6 +27,7 @@ export declare type DisbursementUpdateFormValidationValues = {
     currency?: ValidationFunction<string>;
     bank_account_id?: ValidationFunction<string>;
     status?: ValidationFunction<string>;
+    withdrawal_date?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type DisbursementUpdateFormOverridesProps = {
@@ -35,6 +37,7 @@ export declare type DisbursementUpdateFormOverridesProps = {
     currency?: PrimitiveOverrideProps<TextFieldProps>;
     bank_account_id?: PrimitiveOverrideProps<TextFieldProps>;
     status?: PrimitiveOverrideProps<SelectFieldProps>;
+    withdrawal_date?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type DisbursementUpdateFormProps = React.PropsWithChildren<{
     overrides?: DisbursementUpdateFormOverridesProps | undefined | null;

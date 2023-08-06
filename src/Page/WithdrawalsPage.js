@@ -8,12 +8,13 @@ import {
   Td,
   Th,
   Thead,
-  Tr, Badge,
+  Tr, Badge, Button,
 } from '@chakra-ui/react';
 import { getDonations, getWithdrawals } from '../Service/amplifyService';
 import { Pagination } from '@aws-amplify/ui-react';
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { generateNachaFile } from '../Service/natchaService';
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -54,6 +55,25 @@ export function WithdrawalsPage(){
     <Box>
       <Box  h={"25px"}/>
       <Text fontSize='2xl' as='b' >Withdrawals ({totalWithdrawals})</Text>
+      <Box h={"25px"}/>
+      {/*add a button to initiate the natcha batch*/}
+      <Box h={"25px"}/>
+      <Button colorScheme="teal" variant="solid" onClick={() => {
+        const rows = [
+          {
+            receivingDFI: '99085',
+            DFIAccount: '8881125',
+            amount: '175',
+            // Add other necessary fields as needed
+          },
+          // Add more rows as needed
+        ];
+
+        generateNachaFile(rows).then(() => {
+          console.log('NACHA file generated and download initiated.');
+        });
+
+      }}>Initiate Batch</Button>
       <Box h={"25px"}/>
       <Skeleton isLoaded={!isLoading}>
         <TableContainer>
