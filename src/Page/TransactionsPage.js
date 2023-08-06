@@ -10,7 +10,7 @@ import {
   Thead,
   Tr, Badge, ButtonGroup, Button, Flex, Menu, MenuButton, MenuList, MenuItem, useToast,
 } from '@chakra-ui/react';
-import { getDonations, saveDonation } from '../Service/amplifyService';
+import { getDonations, saveDonation, updateProfileBalance } from '../Service/amplifyService';
 import { Pagination } from '@aws-amplify/ui-react';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -76,12 +76,15 @@ export function TransactionsPage(){
           Donation.copyOf(donation, updated => {
             updated.status = DonationStatus.COMPLETED
           })).then(_ => {
-          toast({
-            title: 'Transaction successfully confirmed.',
-            status: 'info',
-            duration: 5000,
-            isClosable: true,
+          updateProfileBalance(donation.user_id, donation.amount).then(_ => {
+            toast({
+              title: 'Transaction successfully confirmed.',
+              status: 'info',
+              duration: 5000,
+              isClosable: true,
+            });
           });
+
           setIsLoading(true);
           getDonations(currentPage, userId, status).then(response => {
             setDonations(response.donations);

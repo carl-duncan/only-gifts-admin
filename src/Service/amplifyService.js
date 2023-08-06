@@ -1,5 +1,5 @@
 import { DataStore, Predicates } from 'aws-amplify';
-import { Disbursement, Donation, DonationStatus, Profile, Statistic } from '../models';
+import { Deduction, Disbursement, Donation, DonationStatus, Profile, Statistic } from '../models';
 import axios from 'axios';
 
 export async function getUsers(page, searchValue) {
@@ -153,4 +153,78 @@ export async function saveDonation(donation) {
     console.error(error);
   }
 }
+
+export const updateProfileBalance = async (user_id, amount) => {
+  let profile = await getProfileByUserId(user_id);
+
+  let deductions = await DataStore.query(Deduction);
+
+  let netAmount = amount;
+  await updateStatistic('total-transactions', 1);
+  await updateStatistic('gmv', amount);
+
+  for (const deduction of deductions) {
+    let totalDeduction = (amount * deduction.percent) + deduction.flat_amount;
+    netAmount -= totalDeduction;
+    await updateStatistic('total-revenue', totalDeduction);
+  }
+
+  await DataStore.save(
+    Profile.copyOf(profile, updated => {
+      updated.balance = updated.balance + netAmount;
+    }));
+
+  await sendNotification(profile.token, amount);
+};
+
+export const getProfileByUserId = async (userId) => {
+  const profiles = await DataStore.query(Profile,
+    (c) => c.user_id.eq(userId));
+
+  return profiles[0];
+};
+
+export const updateStatistic = async (code, value) => {
+  const statistics = await DataStore.query(Statistic,
+    (c) => c.code.eq(code));
+
+  const statistic = statistics.length > 0 ? statistics[0] : null;
+
+  if (statistic == null) {
+    return false;
+  }
+
+  await DataStore.save(
+    Statistic.copyOf(statistic, updated => {
+      updated.value = statistic.value + value;
+    }));
+
+  return true;
+};
+
+
+export const sendNotification = async (deviceToken, amount) => {
+  const url = 'https://fcm.googleapis.com/fcm/send';
+  const serverKey = 'AAAAJBKYgbQ:APA91bHs91binTXJvop9aiag8M3jT4ITWvRYHNZPhNGrl-vqb1BIOU39-yL-RhOHCGnTCoiK-RNhOCTzaO6U2Ct8zEd0_8cy0_X1rmoc4NhgLyvS6GeOCtFMO2Df4VQeLmDKQi_mD3TO';
+
+  axios({
+    method: 'post',
+    url: url,
+    headers: {
+      'Authorization': `key=${serverKey}`,
+      'Content-Type': 'application/json',
+    },
+    data: {
+      notification: {
+        title: 'New Gift : $' + amount,
+        body: 'You have received a gift of $' + amount,
+      },
+      to: deviceToken,
+    },
+  }).then(response => {
+    console.log('Notification sent successfully', response);
+  }).catch(error => {
+    console.log('Error sending notification', error);
+  });
+};
 
