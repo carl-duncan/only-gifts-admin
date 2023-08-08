@@ -76,7 +76,7 @@ export function TransactionsPage(){
           Donation.copyOf(donation, updated => {
             updated.status = DonationStatus.COMPLETED
           })).then(_ => {
-          updateProfileBalance(donation.user_id, donation.amount).then(_ => {
+          updateProfileBalance(donation.user_id, parseFloat(donation.amount)).then(_ => {
             toast({
               title: 'Transaction successfully confirmed.',
               status: 'info',
